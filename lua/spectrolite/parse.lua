@@ -35,7 +35,7 @@ M.rgb = function(str)
 	b = tonumber(b)
 	a = tonumber(a)
 
-	return { r, g, b, a }
+	return { r = r, g = g, b = b, a = a }
 end
 
 M.hsl = function(str)
@@ -46,7 +46,7 @@ M.hsl = function(str)
 	l = tonumber(l)
 	a = tonumber(a)
 
-	return { h, s, l, a }
+	return { h = h, s = s, l = l, a = a }
 end
 
 M.hxl = function(str)
@@ -57,7 +57,7 @@ M.hxl = function(str)
 	l = tonumber(l)
 	a = tonumber(a)
 
-	return { h, x, l, a }
+	return { h = h, x = x, l = l, a = a }
 end
 
 return M

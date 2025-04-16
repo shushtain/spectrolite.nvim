@@ -87,7 +87,7 @@ M.from_hsl = function(color)
 	l = l / 100
 
 	if s == 0 then
-		return { l * 255, l * 255, l * 255, a }
+		return { r = l * 255, g = l * 255, b = l * 255, a = a }
 	end
 
 	local temp1, temp2, tempR, tempG, tempB
@@ -111,19 +111,77 @@ M.from_hsl = function(color)
 	local g = utils.hue_to_rgb(temp1, temp2, tempG)
 	local b = utils.hue_to_rgb(temp1, temp2, tempB)
 
-	return { r = r, g = g, b = b, a = a }
+	return { r = r * 255, g = g * 255, b = b * 255, a = a }
 end
+
+local A = -0.14861
+local B = 1.78277
+local C = -0.29227
+local D = -0.90649
+local E = 1.97294
+local ED = E * D
+local EB = E * B
+local BC_DA = B * C - D * A
 
 M.to_hxl = function(color)
 	local r, g, b, a = color.r, color.g, color.b, color.a
-	local h, x, l, a = nil, nil, nil, nil
+
+	r = r / 255
+	g = g / 255
+	b = b / 255
+
+	local l = (BC_DA * b + ED * r - EB * g) / (BC_DA + ED - EB)
+	local bl = b - l
+	local k = (E * (g - l) - C * bl) / D
+
+	local x = 0
+	if l > 0 and l < 1 then
+		x = math.sqrt(k * k + bl * bl) / (E * l * (1 - l))
+	end
+
+	local h = 0
+	if x > 0 then
+		h = math.atan2(k, bl) * (180 / math.pi) - 120
+	end
+
+	h = h % 360
+	x = x * 100
+	l = l * 100
+
 	return { h = h, x = x, l = l, a = a }
 end
 
 M.from_hxl = function(color)
 	local h, x, l, a = color.h, color.x, color.l, color.a
-	local r, g, b, a = nil, nil, nil, nil
-	return {}
+	x = x / 100
+	l = l / 100
+
+	if l <= 0 then
+		return { r = 0, g = 0, b = 0, a = a }
+	end
+	if l >= 1 then
+		return { r = 255, g = 255, b = 255, a = a }
+	end
+
+	h = (math.pi * (h + 120)) / 180
+
+	if x <= 0 then
+		h = 0
+	end
+
+	local k = x * l * (1 - l)
+	local cosh = math.cos(h)
+	local sinh = math.sin(h)
+
+	local r = l + k * (A * cosh + B * sinh)
+	local g = l + k * (C * cosh + D * sinh)
+	local b = l + k * (E * cosh)
+
+	r = math.min(1, math.max(0, r))
+	g = math.min(1, math.max(0, g))
+	b = math.min(1, math.max(0, b))
+
+	return { r = r * 255, g = g * 255, b = b * 255, a = a }
 end
 
 return M

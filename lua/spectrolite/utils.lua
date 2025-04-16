@@ -32,6 +32,10 @@ M.read = function()
 	local start_pos = vim.fn.getpos("'<")
 	local end_pos = vim.fn.getpos("'>")
 
+	if not start_pos or not end_pos then
+		error("Could not get selection positions")
+	end
+
 	-- Add them as reference points
 	local start_line = start_pos[2]
 	local start_col = start_pos[3]
@@ -46,9 +50,11 @@ M.read = function()
 	-- these are 0-based, with end_col being exclusive
 	local text = vim.api.nvim_buf_get_text(0, start_line - 1, start_col - 1, end_line - 1, end_col, {})[1]
 
-	if text ~= "" then
-		return { start_line = start_line, start_col = start_col, end_line = end_line, end_col = end_col, text = text }
+	if not text or text == "" then
+		error("No text in selection")
 	end
+
+	return { start_line = start_line, start_col = start_col, end_line = end_line, end_col = end_col, text = text }
 end
 
 M.write = function(selection)

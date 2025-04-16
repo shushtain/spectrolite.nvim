@@ -26,10 +26,10 @@ return {
 			round_hsl = true,
 			round_hxl = true,
 		})
-		vim.keymap.set({ "n", "v" }, "<leader>#h", "<cmd> SpectroliteHex <CR>")
-		vim.keymap.set({ "n", "v" }, "<leader>#r", "<cmd> SpectroliteRgb <CR>")
-		vim.keymap.set({ "n", "v" }, "<leader>#s", "<cmd> SpectroliteHsl <CR>")
-		vim.keymap.set({ "n", "v" }, "<leader>#x", "<cmd> SpectroliteHxl <CR>")
+		vim.keymap.set({ "n", "v" }, "<leader>#h", "<cmd><C-u> SpectroliteHex <CR>")
+		vim.keymap.set({ "n", "v" }, "<leader>#r", "<cmd><C-u> SpectroliteRgb <CR>")
+		vim.keymap.set({ "n", "v" }, "<leader>#s", "<cmd><C-u> SpectroliteHsl <CR>")
+		vim.keymap.set({ "n", "v" }, "<leader>#x", "<cmd><C-u> SpectroliteHxl <CR>")
 	end
 }
 ```

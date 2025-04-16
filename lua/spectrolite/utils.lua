@@ -27,6 +27,9 @@ end
 M.read = function()
 	local selection = {}
 
+	-- wait for visual mode to update marks
+	vim.cmd("normal! gv")
+
 	-- Get start and end positions of the current selection
 	-- these are 1-based
 	local start_pos = vim.fn.getpos("'<")

@@ -46,6 +46,10 @@ M.read = function()
 		error("Color selection must be on a single line")
 	end
 
+	if end_col < start_col then
+		start_col, end_col = end_col, start_col
+	end
+
 	-- Get the text within these bounds
 	-- these are 0-based, with end_col being exclusive
 	local text = vim.api.nvim_buf_get_text(0, start_line - 1, start_col - 1, end_line - 1, end_col, {})[1]

@@ -27,8 +27,8 @@ end
 M.read = function()
 	local selection = {}
 
-	-- wait for visual mode to update marks
-	vim.cmd("normal! gv")
+	-- exit visual mode to update marks
+	vim.cmd("normal! " .. vim.api.nvim_replace_termcodes("<Esc>", true, false, true))
 
 	-- Get start and end positions of the current selection
 	-- these are 1-based
@@ -36,7 +36,8 @@ M.read = function()
 	local end_pos = vim.fn.getpos("'>")
 
 	if not start_pos or not end_pos then
-		error("Could not get selection positions")
+		vim.notify("Could not get selection", vim.log.levels.WARN)
+		return nil
 	end
 
 	-- Add them as reference points
@@ -46,7 +47,8 @@ M.read = function()
 	local end_col = end_pos[3]
 
 	if start_line ~= end_line then
-		error("Color selection must be on a single line")
+		vim.notify("Color must be on a single line", vim.log.levels.WARN)
+		return nil
 	end
 
 	if end_col < start_col then
@@ -54,11 +56,12 @@ M.read = function()
 	end
 
 	-- Get the text within these bounds
-	-- these are 0-based, with end_col being exclusive
+	-- these are 0-based, with exclusive end_col
 	local text = vim.api.nvim_buf_get_text(0, start_line - 1, start_col - 1, end_line - 1, end_col, {})[1]
 
 	if not text or text == "" then
-		error("No text in selection")
+		vim.notify("Selection is empty", vim.log.levels.WARN)
+		return nil
 	end
 
 	return { start_line = start_line, start_col = start_col, end_line = end_line, end_col = end_col, text = text }

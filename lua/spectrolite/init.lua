@@ -8,12 +8,12 @@ local M = {}
 M.to_hex = function()
 	local selection = utils.read()
 	if not selection then
-		return
+		return nil
 	end
 
 	local color_in = parse.auto(selection.text)
 	if not color_in then
-		return
+		return nil
 	end
 
 	local color_out = convert.to_hex(color_in)
@@ -24,12 +24,12 @@ end
 M.to_rgb = function()
 	local selection = utils.read()
 	if not selection then
-		return
+		return nil
 	end
 
 	local color_in = parse.auto(selection.text)
 	if not color_in then
-		return
+		return nil
 	end
 
 	local color_out = color_in
@@ -40,7 +40,7 @@ end
 M.to_hsl = function()
 	local selection = utils.read()
 	if not selection then
-		return
+		return nil
 	end
 
 	local color_in = parse.auto(selection.text)
@@ -56,12 +56,12 @@ end
 M.to_hxl = function()
 	local selection = utils.read()
 	if not selection then
-		return
+		return nil
 	end
 
 	local color_in = parse.auto(selection.text)
 	if not color_in then
-		return
+		return nil
 	end
 
 	local color_out = convert.to_hxl(color_in)

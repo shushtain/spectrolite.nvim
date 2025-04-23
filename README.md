@@ -19,18 +19,18 @@ Here is my config using Lazy:
 
 ```lua
 return {
-	"shushtain/spectrolite.nvim",
-	config = function()
-		require("spectrolite").setup({
-			lower_hex = false,
-			round_hsl = true,
-			round_hxl = true,
-		})
-		vim.keymap.set({ "n", "v" }, "<leader>#h", "<cmd> SpectroliteHex <CR>")
-		vim.keymap.set({ "n", "v" }, "<leader>#r", "<cmd> SpectroliteRgb <CR>")
-		vim.keymap.set({ "n", "v" }, "<leader>#s", "<cmd> SpectroliteHsl <CR>")
-		vim.keymap.set({ "n", "v" }, "<leader>#x", "<cmd> SpectroliteHxl <CR>")
-	end
+  "shushtain/spectrolite.nvim",
+  config = function()
+    require("spectrolite").setup({
+      lower_hex = false,
+      round_hsl = true,
+      round_hxl = true,
+    })
+    vim.keymap.set({ "n", "v" }, "<leader>#h", "<cmd> SpectroliteHex <CR>")
+    vim.keymap.set({ "n", "v" }, "<leader>#r", "<cmd> SpectroliteRgb <CR>")
+    vim.keymap.set({ "n", "v" }, "<leader>#s", "<cmd> SpectroliteHsl <CR>")
+    vim.keymap.set({ "n", "v" }, "<leader>#x", "<cmd> SpectroliteHxl <CR>")
+  end
 }
 ```
 
@@ -65,7 +65,8 @@ I typically set `saturation 110%` for signal (error, warning) colors. The clippi
 
 ## Contributing
 
-- I'm not sure I can handle more Lua for now.
-- Just make a flawless version for me to switch to.
-- Are you ready to DeepSeek for you life?
-- Good luck! And **don't** fork it up!
+I'm not sure I can handle more Lua for now.  
+Just make a flawless version for me to switch to.
+
+> Are you ready to DeepSeek for your life?  
+> Good luck! And **don't** fork it up!

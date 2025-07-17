@@ -69,6 +69,8 @@ M.to_hxl = function()
   utils.write(selection)
 end
 
+---Setup function for Spectrolite
+---@param options Spectrolite.Config|nil
 M.setup = function(options)
   config.__setup(options)
 end

@@ -36,6 +36,7 @@ M.read = function()
   -- these are 1-based
   local start_pos = vim.fn.getpos("'<")
   local end_pos = vim.fn.getpos("'>")
+  local end_pos = vim.fn.getpos("'>")
 
   if not start_pos or not end_pos then
     vim.notify("Could not get selection", vim.log.levels.WARN)
@@ -52,6 +53,10 @@ M.read = function()
     vim.notify("Color must be on a single line", vim.log.levels.WARN)
     return nil
   end
+
+  -- Check for overflow in V-mode
+  local line = vim.fn.getline(start_line)
+  end_col = math.min(end_col, #line)
 
   if end_col < start_col then
     start_col, end_col = end_col, start_col

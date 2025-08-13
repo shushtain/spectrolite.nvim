@@ -1,3 +1,11 @@
+---@class Spectrolite.Hsla
+---@field h number Hue [0-360]
+---@field s number Saturation [0-100]
+---@field l number Lightness [0-100]
+---@field a number Alpha [0-1]
+
+-- FIX:
+
 ---@type Spectrolite.Mode
 local M = {}
 
@@ -26,11 +34,11 @@ M.parse = function(str)
   end
 
   if h and s and l and a then
-    return M.to_rgba({ h = h, s = s, l = l, a = a })
+    return M.serialize({ h = h, s = s, l = l, a = a })
   end
 end
 
-M.to_rgba = function(clr)
+M.serialize = function(clr)
   if not clr.h or not clr.s or not clr.l or not clr.a then
     return nil
   end

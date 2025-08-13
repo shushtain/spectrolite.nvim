@@ -1,3 +1,9 @@
+---@class Spectrolite.Hexa
+---@field rx string Red Hexadecimal ["00"-"FF"]
+---@field gx string Green Hexadecimal ["00"-"FF"]
+---@field bx string Blue Hexadecimal ["00"-"FF"]
+---@field ax string Alpha Hexadecimal ["00"-"FF"]
+
 ---@type Spectrolite.Mode
 local M = {}
 
@@ -24,36 +30,48 @@ M.parse = function(str)
   end
 
   if rx and gx and bx and ax then
-    return M.to_rgba({ rx = rx, gx = gx, bx = bx, ax = ax })
+    return M.serialize({ rx = rx, gx = gx, bx = bx, ax = ax })
   end
 end
 
-M.to_rgba = function(clr)
+M.serialize = function(clr)
   if not clr.rx or not clr.gx or not clr.bx or not clr.ax then
     return nil
   end
 
-  return {
-    r = tonumber("0x" .. clr.rx),
-    g = tonumber("0x" .. clr.gx),
-    b = tonumber("0x" .. clr.bx),
-    a = tonumber("0x" .. clr.ax) / 255,
-  }
+  local r = tonumber("0x" .. clr.rx)
+  local g = tonumber("0x" .. clr.gx)
+  local b = tonumber("0x" .. clr.bx)
+  local a = tonumber("0x" .. clr.ax)
+
+  if r and g and b and a then
+    return {
+      rc = r / 255,
+      gc = g / 255,
+      bc = b / 255,
+      ac = a / 255,
+    }
+  end
 end
 
-M.convert = function(clr)
-  if not clr.r or not clr.g or not clr.b or not clr.a then
+M.convert = function(ser)
+  if not ser.rc or not ser.gc or not ser.bc or not ser.ac then
     return nil
   end
 
-  local r, g, b, a = require("spectrolite.modes.rgba").round(clr)
+  local r = require("spectrolite.utils").round(ser.rc * 255)
+  local g = require("spectrolite.utils").round(ser.gc * 255)
+  local b = require("spectrolite.utils").round(ser.bc * 255)
+  local a = require("spectrolite.utils").round(ser.ac * 255)
 
-  return {
-    rx = ("%02x"):format(r),
-    gx = ("%02x"):format(g),
-    bx = ("%02x"):format(b),
-    ax = ("%02x"):format(a * 255),
-  }
+  if r and g and b and a then
+    return {
+      rx = ("%02x"):format(r),
+      gx = ("%02x"):format(g),
+      bx = ("%02x"):format(b),
+      ax = ("%02x"):format(a),
+    }
+  end
 end
 
 M.format = function(clr)

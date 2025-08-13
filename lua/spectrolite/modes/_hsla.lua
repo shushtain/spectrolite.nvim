@@ -114,7 +114,7 @@ M.from_hsla = function(h, s, l, a)
   return { r = r * 255, g = g * 255, b = b * 255, a = a }
 end
 
-M.to_rgba = function(coords)
+M.serialize = function(coords)
   return nil
 end
 

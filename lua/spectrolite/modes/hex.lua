@@ -1,3 +1,10 @@
+---@class Spectrolite.Hex
+---@field rx string Red Hexadecimal ["00"-"FF"]
+---@field gx string Green Hexadecimal ["00"-"FF"]
+---@field bx string Blue Hexadecimal ["00"-"FF"]
+
+-- FIX:
+
 ---@type Spectrolite.Mode
 local M = {}
 
@@ -22,11 +29,11 @@ M.parse = function(str)
   end
 
   if rx and gx and bx then
-    return M.to_rgba({ rx = rx, gx = gx, bx = bx })
+    return M.serialize({ rx = rx, gx = gx, bx = bx })
   end
 end
 
-M.to_rgba = function(clr)
+M.serialize = function(clr)
   if not clr.rx or not clr.gx or not clr.bx then
     return nil
   end

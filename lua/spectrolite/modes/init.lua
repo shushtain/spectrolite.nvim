@@ -1,23 +1,37 @@
 ---@class Spectrolite.Mode
----@field parse fun(str: string): { r: number, g: number, b: number, a: number } | nil Parse to RGBA coordinates
----@field to_rgba fun(clr: table): { r: number, g: number, b: number, a: number } | nil Convert to RGBA coordinates
----@field convert fun(clr: {r: number, g:number, b:number, a:number}): table|nil Convert to local coordinates
----@field format fun(clr:table): string|nil Format coordinates into string
----@field round fun(clr: table): table|nil Round coordinates
+---@field parse fun(str: string): Spectrolite.Abs|nil Parse string to RGBA coordinates
+---@field serialize fun(clr: Spectrolite.Color):  Spectrolite.Abs|nil Convert to RGBA coordinates
+---@field convert fun(abs: Spectrolite.Abs): Spectrolite.Color|nil Convert to local coordinates
+---@field format fun(clr: Spectrolite.Color): string|nil Format coordinates into string
+---@field round fun(clr: Spectrolite.Color): Spectrolite.Color|nil Round coordinates
+
+---@alias Spectrolite.Color Spectrolite.Rgba | Spectrolite.Rgb | Spectrolite.Hexa | Spectrolite.Hex | Spectrolite.Hsla
+
+---@class Spectrolite.Abs
+---@field rc number Red Channel [0-1]
+---@field gc number Green Channel [0-1]
+---@field bc number Blue Channel [0-1]
+---@field ac number Alpha Channel [0-1]
 
 -- TODO: Store all values as 0-1 instead of 0-255/0-1
 
+---@class Spectrolite.Modes
+---@field modes table All supported modes
+---@field parse fun(str: string): Spectrolite.Abs|nil Parse string to RGBA coordinates
+---@field convert fun(mode: string, abs: Spectrolite.Abs): Spectrolite.Color|nil Convert to local coordinates
+---@field format fun(mode: string, clr: Spectrolite.Color): string|nil Format coordinates into string
+---@field round fun(mode: string, clr: Spectrolite.Color): Spectrolite.Color|nil Round coordinates
 local M = {}
 
 M.modes = {
-  hex = { repr = "HEX", group = "hex" },
-  hexa = { repr = "HEXA", group = "hexa" },
-  hsl = { repr = "HSL", group = "hsl" },
-  hsla = { repr = "HSLA", group = "hsla" },
-  hxl = { repr = "HXL (Cubehelix)", group = "hxl" },
-  hxla = { repr = "HXLA (Cubehelix with Alpha)", group = "hxla" },
-  rgb = { repr = "RGB", group = "rgb" },
-  rgba = { repr = "RGBA", group = "rgba" },
+  hex = { name = "HEX" },
+  hexa = { name = "HEXA" },
+  hsl = { name = "HSL" },
+  hsla = { name = "HSLA" },
+  hxl = { name = "HXL (Cubehelix)" },
+  hxla = { name = "HXLA (Cubehelix with Alpha)" },
+  rgb = { name = "RGB" },
+  rgba = { name = "RGBA" },
 }
 
 M.parse = function(str)
@@ -26,6 +40,7 @@ M.parse = function(str)
   end
 
   str = str:lower()
+
   return require("spectrolite.modes.hexa").parse(str)
     or require("spectrolite.modes.hex").parse(str)
     or require("spectrolite.modes._rgba").parse(str)
@@ -34,58 +49,30 @@ M.parse = function(str)
     or require("spectrolite.modes.hsl").parse(str)
     or require("spectrolite.modes._hxla").parse(str)
     or require("spectrolite.modes.hxl").parse(str)
-    or nil
 end
 
-M.convert = function(mode, coords)
-  if not coords then
+M.convert = function(mode, abs)
+  if not mode or not abs then
     return nil
   end
 
-  local r, g, b, a = coords.r, coords.g, coords.b, coords.a
-  return require("spectrolite.modes." .. M.modes[mode].group).convert(
-    r,
-    g,
-    b,
-    a
-  )
+  return require("spectrolite.modes." .. mode).convert(abs)
 end
 
-M.format = function(coords)
-  if not coords then
+M.format = function(mode, clr)
+  if not mode or not clr then
     return nil
   end
 
-  if type(coords) == "string" then
-    return require("spectrolite.modes.hexa").format(coords)
+  return require("spectrolite.modes." .. mode).format(clr)
+end
+
+M.round = function(mode, clr)
+  if not mode or not clr then
+    return nil
   end
 
-  if coords.r and coords.g and coords.b then
-    return require("spectrolite.modes._rgba").format(
-      coords.r,
-      coords.g,
-      coords.b,
-      coords.a
-    )
-  end
-
-  if coords.s and coords.h and coords.l then
-    return require("spectrolite.modes._hsla").format(
-      coords.h,
-      coords.s,
-      coords.l,
-      coords.a
-    )
-  end
-
-  if coords.x and coords.h and coords.l then
-    return require("spectrolite.modes._hxla").format(
-      coords.h,
-      coords.x,
-      coords.l,
-      coords.a
-    )
-  end
+  return require("spectrolite.modes." .. mode).round(clr)
 end
 
 return M

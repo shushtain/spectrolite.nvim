@@ -9,7 +9,7 @@
 ---@type Spectrolite.Mode
 local M = {}
 
-M.parse = function(str)
+function M.parse(str)
   if not str then
     return nil
   end
@@ -38,7 +38,7 @@ M.parse = function(str)
   end
 end
 
-M.serialize = function(clr)
+function M.serialize(clr)
   if not clr.h or not clr.s or not clr.l or not clr.a then
     return nil
   end
@@ -69,7 +69,7 @@ M.serialize = function(clr)
   tempG = h
   tempB = (h - 1 / 3) % 1
 
-  local hue_to_rgb = function(t1, t2, tc)
+  local function hue_to_rgb(t1, t2, tc)
     if 6 * tc < 1 then
       return t2 + (t1 - t2) * tc * 6
     elseif 2 * tc < 1 then
@@ -90,7 +90,7 @@ M.serialize = function(clr)
   end
 end
 
-M.convert = function(clr)
+function M.convert(clr)
   if not clr.r or not clr.g or not clr.b or not clr.a then
     return nil
   end
@@ -131,12 +131,12 @@ M.convert = function(clr)
   end
 end
 
-M.format = function(clr)
+function M.format(clr)
   if not clr.h or not clr.s or not clr.l or not clr.a then
     return nil
   end
 
-  if require("spectrolite.config").config.round_hsl then
+  if require("spectrolite.config").config.format.round_hsl then
     local h, s, l, a = M.round(clr)
     return ("hsla(%d %d%% %d%% / %.2f)"):format(h, s, l, a)
   else
@@ -145,7 +145,7 @@ M.format = function(clr)
   end
 end
 
-M.round = function(clr)
+function M.round(clr)
   if not clr.h or not clr.s or not clr.l or not clr.a then
     return nil
   end

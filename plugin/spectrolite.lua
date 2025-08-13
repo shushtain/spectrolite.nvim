@@ -3,66 +3,43 @@ if vim.g.spectrolite_loaded then
 end
 vim.g.spectrolite_loaded = true
 
--- TODO:
--- Spectrolite! for noreplace
--- Raw? (hex!)
--- round mode
+vim.api.nvim_create_user_command("Spectrolite", function(cmd)
+  local mode
 
-vim.api.nvim_create_user_command("Spectrolite", function(_)
-  vim.ui.select(vim.tbl_keys(require("spectrolite.utils").modes), {
-    prompt = "Target color space:",
-    format_item = function(mode)
-      return require("spectrolite.utils").modes[mode]
-    end,
-  }, function(mode)
-    if mode then
-      vim.ui.input({
-        prompt = "Source color (will use selection if empty): ",
-      }, function(input)
-        if input then
-          require("spectrolite").convert(mode, input)
-        end
-      end)
+  if cmd.nargs == 0 then
+    local modes = require("spectrolite.utils").modes
+    vim.ui.select(vim.tbl_keys(modes), {
+      prompt = "Target color space: ",
+      format_item = function(opt)
+        return modes[opt].name
+      end,
+    }, function(opt)
+      mode = opt
+    end)
+  else
+    mode = cmd.fargs[1]:gsub("%s", "")
+  end
+
+  if mode then
+    require("spectrolite").convert(mode)
+  end
+end, {
+  nargs = "?",
+  range = true,
+  desc = "Convert color into target mode",
+  complete = function(prefix, line, col)
+    line = line:sub(1, col):match("Spectrolite%s*([^%s]*)$")
+    if not line then
+      return {}
     end
-  end)
-end, {
-  range = true,
-  register = true,
-  desc = "Convert color",
-})
 
-vim.api.nvim_create_user_command("SpectroliteHex", function(cmd)
-  require("spectrolite").convert("hex", cmd.args)
-end, {
-  range = true,
-  register = true,
-  nargs = "?",
-  desc = "Convert color to HEX",
-})
+    local candidates = require("spectrolite.modes").modes
+    candidates = vim.tbl_keys(candidates)
+    candidates = vim.tbl_filter(function(x)
+      return tostring(x):find(prefix, 1, true) == 1
+    end, candidates)
 
-vim.api.nvim_create_user_command("SpectroliteHsl", function(cmd)
-  require("spectrolite").convert("hsl", cmd.args)
-end, {
-  range = true,
-  register = true,
-  nargs = "?",
-  desc = "Convert color to HSL",
-})
-
-vim.api.nvim_create_user_command("SpectroliteHxl", function(cmd)
-  require("spectrolite").convert("hxl", cmd.args)
-end, {
-  range = true,
-  register = true,
-  nargs = "?",
-  desc = "Convert color to Cubehelix",
-})
-
-vim.api.nvim_create_user_command("SpectroliteRgb", function(cmd)
-  require("spectrolite").convert("rgb", cmd.args)
-end, {
-  range = true,
-  register = true,
-  nargs = "?",
-  desc = "Convert color to RGB",
+    table.sort(candidates)
+    return candidates
+  end,
 })

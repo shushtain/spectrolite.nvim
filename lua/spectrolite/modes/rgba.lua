@@ -4,12 +4,10 @@
 ---@field b number Blue [0-255]
 ---@field a number Alpha [0-255]
 
--- FIX:
-
 ---@type Spectrolite.Mode
 local M = {}
 
-M.parse = function(str)
+function M.parse(str)
   if not str then
     return nil
   end
@@ -29,7 +27,11 @@ M.parse = function(str)
   end
 end
 
-M.serialize = function(clr)
+function M.serialize(clr)
+  if not clr then
+    return nil
+  end
+
   if not clr.r or not clr.g or not clr.b or not clr.a then
     return nil
   end
@@ -42,37 +44,64 @@ M.serialize = function(clr)
   }
 end
 
-M.convert = function(ser)
-  if not ser.rc or not ser.gc or not ser.bc or not ser.ac then
+function M.convert(abs)
+  if not abs then
     return nil
   end
 
-  return {
-    r = ser.rc * 255,
-    g = ser.gc * 255,
-    b = ser.bc * 255,
-    a = ser.ac,
+  if not abs.rc or not abs.gc or not abs.bc or not abs.ac then
+    return nil
+  end
+
+  local clr = {
+    r = abs.rc * 255,
+    g = abs.gc * 255,
+    b = abs.bc * 255,
+    a = abs.ac,
   }
+
+  if require("spectrolite.config").config.convert.round_rgb then
+    return M.round(clr)
+  end
+
+  return clr
 end
 
-M.format = function(clr)
+function M.format(clr)
+  if not clr then
+    return nil
+  end
+
   if not clr.r or not clr.g or not clr.b or not clr.a then
     return nil
   end
 
-  local r, g, b, a = M.round(clr)
-  return ("rgba(%d %d %d / %.2f)"):format(r, g, b, a)
+  if
+    require("spectrolite.config").config.format.round_rgb
+    or require("spectrolite.config").config.convert.round_rgb
+  then
+    local out = M.round(clr)
+    return out and ("rgba(%d %d %d / %.2f)"):format(out.r, out.g, out.b, out.a)
+  else
+    local out = M.round(clr, 2)
+    return out
+      and ("rgba(%.2f %.2f %.2f / %.2f)"):format(out.r, out.g, out.b, out.a)
+  end
 end
 
-M.round = function(clr)
+function M.round(clr, precision)
+  if not clr then
+    return nil
+  end
+
   if not clr.r or not clr.g or not clr.b or not clr.a then
     return nil
   end
 
   return {
-    r = require("spectrolite.utils").round(clr.r),
-    g = require("spectrolite.utils").round(clr.g),
-    b = require("spectrolite.utils").round(clr.b),
+    r = require("spectrolite.utils").round(clr.r, precision),
+    g = require("spectrolite.utils").round(clr.g, precision),
+    b = require("spectrolite.utils").round(clr.b, precision),
     a = require("spectrolite.utils").round(clr.a, 2),
   }
 end

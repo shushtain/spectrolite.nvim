@@ -7,7 +7,7 @@
 ---@type Spectrolite.Mode
 local M = {}
 
-M.parse = function(str)
+function M.parse(str)
   if not str then
     return nil
   end
@@ -30,11 +30,15 @@ M.parse = function(str)
   end
 
   if rx and gx and bx and ax then
-    return M.serialize({ rx = rx, gx = gx, bx = bx, ax = ax })
+    return M.serialize({ rx = rx, gx = gx, bx = bx, ax = ax }), "hexa"
   end
 end
 
-M.serialize = function(clr)
+function M.serialize(clr)
+  if not clr then
+    return nil
+  end
+
   if not clr.rx or not clr.gx or not clr.bx or not clr.ax then
     return nil
   end
@@ -54,47 +58,75 @@ M.serialize = function(clr)
   end
 end
 
-M.convert = function(ser)
-  if not ser.rc or not ser.gc or not ser.bc or not ser.ac then
+function M.convert(abs)
+  if not abs then
     return nil
   end
 
-  local r = require("spectrolite.utils").round(ser.rc * 255)
-  local g = require("spectrolite.utils").round(ser.gc * 255)
-  local b = require("spectrolite.utils").round(ser.bc * 255)
-  local a = require("spectrolite.utils").round(ser.ac * 255)
+  if not abs.rc or not abs.gc or not abs.bc or not abs.ac then
+    return nil
+  end
 
-  if r and g and b and a then
+  local r = require("spectrolite.utils").round(abs.rc * 255)
+  local g = require("spectrolite.utils").round(abs.gc * 255)
+  local b = require("spectrolite.utils").round(abs.bc * 255)
+  local a = require("spectrolite.utils").round(abs.ac * 255)
+
+  if not r or not g or not b or not a then
+    return nil
+  end
+
+  local rx = ("%02x"):format(r)
+  local gx = ("%02x"):format(g)
+  local bx = ("%02x"):format(b)
+  local ax = ("%02x"):format(a)
+
+  if require("spectrolite.config").config.convert.upper_hex then
     return {
-      rx = ("%02x"):format(r),
-      gx = ("%02x"):format(g),
-      bx = ("%02x"):format(b),
-      ax = ("%02x"):format(a),
+      rx = rx:upper(),
+      gx = gx:upper(),
+      bx = bx:upper(),
+      ax = ax:upper(),
+    }
+  else
+    return {
+      rx = rx:lower(),
+      gx = gx:lower(),
+      bx = bx:lower(),
+      ax = ax:lower(),
     }
   end
 end
 
-M.format = function(clr)
+function M.format(clr)
+  if not clr then
+    return nil
+  end
+
   if not clr.rx or not clr.gx or not clr.bx or not clr.ax then
     return nil
   end
 
-  if require("spectrolite.config").config.lower_hex then
-    return "#"
-      .. clr.rx:lower()
-      .. clr.gx:lower()
-      .. clr.bx:lower()
-      .. clr.ax:lower()
-  else
+  if require("spectrolite.config").config.format.upper_hex then
     return "#"
       .. clr.rx:upper()
       .. clr.gx:upper()
       .. clr.bx:upper()
       .. clr.ax:upper()
+  else
+    return "#"
+      .. clr.rx:lower()
+      .. clr.gx:lower()
+      .. clr.bx:lower()
+      .. clr.ax:lower()
   end
 end
 
-M.round = function(clr)
+function M.round(clr)
+  if not clr then
+    return nil
+  end
+
   if not clr.rx or not clr.gx or not clr.bx or not clr.ax then
     return nil
   end

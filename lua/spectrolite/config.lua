@@ -1,7 +1,8 @@
 ---@class Spectrolite.Config
----@field round_hsl? boolean If `true`, round HSL values to the nearest integer. Default is `true`
----@field round_hxl? boolean If `true`, round Cubehelix values to the nearest integer. Default is `true`
----@field lower_hex? boolean If true, use lowercase HEX values. Default is false
+---@field round_hsl? boolean If `true`, round HSL(A) values. Default is `true`
+---@field round_hxl? boolean If `true`, round HXL(A) values. Default is `true`
+---@field round_rgb? boolean If `true`, round RGB(A) values. Default is `true`
+---@field upper_hex? boolean If `true`, uppercase HEX(A) values. Default is `true`
 
 local M = {}
 
@@ -9,11 +10,12 @@ local M = {}
 M.config = {
   round_hsl = true,
   round_hxl = true,
-  lower_hex = false,
+  round_rgb = true,
+  upper_hex = true,
 }
 
 ---@param opts? Spectrolite.Config
-M.setup = function(opts)
+function M.setup(opts)
   M.config = vim.tbl_deep_extend("force", M.config, opts or {})
 end
 

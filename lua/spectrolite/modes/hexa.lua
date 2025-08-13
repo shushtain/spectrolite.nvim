@@ -2,83 +2,84 @@
 local M = {}
 
 M.parse = function(str)
-  local hex_a = str:match("#(%x+)")
-  if hex_a then
-    return M.to_rgba(hex_a)
-  end
-  return nil
-end
-
-M.to_hexa = function(r, g, b, a)
-  return "#" .. string.format("%02x%02x%02x%02x", r, g, b, 255 * a)
-end
-
-M.to_hex = function(r, g, b)
-  return "#" .. string.format("%02x%02x%02x", r, g, b)
-end
-
-M.from_hexa = function(hexa)
-  hexa = hexa:gsub("#", "")
-
-  if hexa:len() == 3 then
-    local r, g, b = hexa:sub(1, 1), hexa:sub(2, 2), hexa:sub(3, 3)
-    return {
-      r = tonumber("0x" .. r .. r),
-      g = tonumber("0x" .. g .. g),
-      b = tonumber("0x" .. b .. b),
-    }
+  if not str then
+    return nil
   end
 
-  if hexa:len() == 4 then
-    local r, g, b, a =
-      hexa:sub(1, 1), hexa:sub(2, 2), hexa:sub(3, 3), hexa:sub(4, 4)
-    return {
-      r = tonumber("0x" .. r .. r),
-      g = tonumber("0x" .. g .. g),
-      b = tonumber("0x" .. b .. b),
-      a = tonumber("0x" .. a .. a) / 255,
-    }
+  local hexa = str:match("#(%x+)")
+  local rx, gx, bx, ax
+
+  if hexa and #hexa == 4 then
+    rx = hexa:sub(1, 1):rep(2)
+    gx = hexa:sub(2, 2):rep(2)
+    bx = hexa:sub(3, 3):rep(2)
+    ax = hexa:sub(4, 4):rep(2)
   end
 
-  if hexa:len() == 6 then
-    local r, g, b = hexa:sub(1, 2), hexa:sub(3, 4), hexa:sub(5, 6)
-    return {
-      r = tonumber("0x" .. r .. r),
-      g = tonumber("0x" .. g .. g),
-      b = tonumber("0x" .. b .. b),
-    }
+  if hexa and #hexa == 8 then
+    rx = hexa:sub(1, 2)
+    gx = hexa:sub(3, 4)
+    bx = hexa:sub(5, 6)
+    ax = hexa:sub(7, 8)
   end
 
-  if hexa:len() == 8 then
-    local r, g, b, a =
-      hexa:sub(1, 2), hexa:sub(3, 4), hexa:sub(5, 6), hexa:sub(7, 8)
-    return {
-      r = tonumber("0x" .. r .. r),
-      g = tonumber("0x" .. g .. g),
-      b = tonumber("0x" .. b .. b),
-      a = tonumber("0x" .. a .. a) / 255,
-    }
+  if rx and gx and bx and ax then
+    return M.to_rgba({ rx = rx, gx = gx, bx = bx, ax = ax })
   end
 end
 
-M.to_rgba = function(coords)
-  return nil
-end
-
-M.convert = function(r, g, b, a)
-  return nil
-end
-
--- FIX:
-M.format = function(hex_a)
-  if not hex_a then
-    vim.notify("Cannot format as HEX", vim.log.levels.WARN)
+M.to_rgba = function(clr)
+  if not clr.rx or not clr.gx or not clr.bx or not clr.ax then
+    return nil
   end
 
-  local lower_hex = require("spectrolite.config").options.lower_hex
-  return lower_hex and hex_a:lower() or hex_a:upper()
+  return {
+    r = tonumber("0x" .. clr.rx),
+    g = tonumber("0x" .. clr.gx),
+    b = tonumber("0x" .. clr.bx),
+    a = tonumber("0x" .. clr.ax) / 255,
+  }
 end
 
-M.round = function(hex_a)
-  return hex_a
+M.convert = function(clr)
+  if not clr.r or not clr.g or not clr.b or not clr.a then
+    return nil
+  end
+
+  local r, g, b, a = require("spectrolite.modes.rgba").round(clr)
+
+  return {
+    rx = ("%02x"):format(r),
+    gx = ("%02x"):format(g),
+    bx = ("%02x"):format(b),
+    ax = ("%02x"):format(a * 255),
+  }
+end
+
+M.format = function(clr)
+  if not clr.rx or not clr.gx or not clr.bx or not clr.ax then
+    return nil
+  end
+
+  if require("spectrolite.config").config.lower_hex then
+    return "#"
+      .. clr.rx:lower()
+      .. clr.gx:lower()
+      .. clr.bx:lower()
+      .. clr.ax:lower()
+  else
+    return "#"
+      .. clr.rx:upper()
+      .. clr.gx:upper()
+      .. clr.bx:upper()
+      .. clr.ax:upper()
+  end
+end
+
+M.round = function(clr)
+  if not clr.rx or not clr.gx or not clr.bx or not clr.ax then
+    return nil
+  end
+
+  return clr
 end

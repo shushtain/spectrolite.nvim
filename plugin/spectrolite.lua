@@ -3,7 +3,10 @@ if vim.g.spectrolite_loaded then
 end
 vim.g.spectrolite_loaded = true
 
--- TODO: This and color modes
+-- TODO:
+-- Spectrolite! for noreplace
+-- Raw? (hex!)
+-- round mode
 
 vim.api.nvim_create_user_command("Spectrolite", function(_)
   vim.ui.select(vim.tbl_keys(require("spectrolite.utils").modes), {

@@ -1,10 +1,22 @@
 ---@type Spectrolite.Mode
 local M = {}
 
-M.hsla = function(str)
+M.parse = function(str)
+  if not str then
+    return nil
+  end
+
   local h, s, l, a = str:match(
     "hsla?%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?[/,%s]+([%d%.]+%%?)%s*%)"
   )
+
+  if not h or not s or not l or not a then
+    return nil
+  end
+
+  h = tonumber(h)
+  s = tonumber(s)
+  l = tonumber(l)
 
   if a:match("%%") then
     a = a:gsub("%%", "")
@@ -13,45 +25,72 @@ M.hsla = function(str)
     a = tonumber(a)
   end
 
-  h = tonumber(h)
-  s = tonumber(s)
-  l = tonumber(l)
-
   if h and s and l and a then
-    return require("spectrolite.modes.convert").from_hsla(h, s, l, a)
+    return M.to_rgba({ h = h, s = s, l = l, a = a })
+  end
+end
+
+M.to_rgba = function(clr)
+  if not clr.h or not clr.s or not clr.l or not clr.a then
+    return nil
   end
 
-  return nil
-end
+  local h = clr.h
+  local s = clr.s / 100
+  local l = clr.l / 100
+  local a = clr.a
 
-M.hsl = function(str)
-  local h, s, l =
-    str:match("hsl%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?%s*%)")
-
-  h = tonumber(h)
-  s = tonumber(s)
-  l = tonumber(l)
-
-  if h and s and l then
-    return require("spectrolite.modes.convert").from_hsla(h, s, l, 1)
+  if s == 0 then
+    return { r = l * 255, g = l * 255, b = l * 255, a = a }
   end
 
-  return nil
+  local temp1, temp2, tempR, tempG, tempB
+
+  if l < 0.5 then
+    temp1 = l * (1 + s)
+  else
+    temp1 = l + s - l * s
+  end
+
+  temp2 = 2 * l - temp1
+
+  h = h % 360
+  h = h / 360
+
+  tempR = (h + 1 / 3) % 1
+  tempG = h
+  tempB = (h - 1 / 3) % 1
+
+  local hue_to_rgb = function(t1, t2, tc)
+    if 6 * tc < 1 then
+      return t2 + (t1 - t2) * tc * 6
+    elseif 2 * tc < 1 then
+      return t1
+    elseif 3 * tc < 2 then
+      return t2 + (t1 - t2) * (2 / 3 - tc) * 6
+    else
+      return t2
+    end
+  end
+
+  local r = hue_to_rgb(temp1, temp2, tempR)
+  local g = hue_to_rgb(temp1, temp2, tempG)
+  local b = hue_to_rgb(temp1, temp2, tempB)
+
+  if r and g and b and a then
+    return { r = r * 255, g = g * 255, b = b * 255, a = a }
+  end
 end
 
-M.parse = function(str)
-  return nil
-end
+M.convert = function(clr)
+  if not clr.r or not clr.g or not clr.b or not clr.a then
+    return nil
+  end
 
-M.to_hsla = function(r, g, b, a)
-  local h, s, l = M.to_hsl(r, g, b)
-  return { h = h, s = s, l = l, a = a }
-end
-
-M.to_hsl = function(r, g, b)
-  r = r / 255
-  g = g / 255
-  b = b / 255
+  local r = clr.r / 255
+  local g = clr.g / 255
+  local b = clr.b / 255
+  local a = clr.a
 
   local max = math.max(r, g, b)
   local min = math.min(r, g, b)
@@ -79,83 +118,34 @@ M.to_hsl = function(r, g, b)
     h = h % 360
   end
 
-  return { h = h, s = s * 100, l = l * 100 }
+  if h and s and l and a then
+    return { h = h, s = s * 100, l = l * 100, a = a }
+  end
 end
 
-M.from_hsla = function(h, s, l, a)
-  s = s / 100
-  l = l / 100
-
-  if s == 0 then
-    return { r = l * 255, g = l * 255, b = l * 255, a = a }
+M.format = function(clr)
+  if not clr.h or not clr.s or not clr.l or not clr.a then
+    return nil
   end
 
-  local temp1, temp2, tempR, tempG, tempB
-
-  if l < 0.5 then
-    temp1 = l * (1 + s)
+  if require("spectrolite.config").config.round_hsl then
+    local h, s, l, a = M.round(clr)
+    return ("hsla(%d %d%% %d%% / %.2f)"):format(h, s, l, a)
   else
-    temp1 = l + s - l * s
+    local h, s, l, a = clr.h, clr.s, clr.l, clr.a
+    return ("hsla(%.2f %.2f%% %.2f%% / %.2f)"):format(h, s, l, a)
+  end
+end
+
+M.round = function(clr)
+  if not clr.h or not clr.s or not clr.l or not clr.a then
+    return nil
   end
 
-  temp2 = 2 * l - temp1
-
-  h = h % 360
-  h = h / 360
-
-  tempR = (h + 1 / 3) % 1
-  tempG = h
-  tempB = (h - 1 / 3) % 1
-
-  local r = require("spectrolite.utils").hue_to_rgb(temp1, temp2, tempR)
-  local g = require("spectrolite.utils").hue_to_rgb(temp1, temp2, tempG)
-  local b = require("spectrolite.utils").hue_to_rgb(temp1, temp2, tempB)
-
-  return { r = r * 255, g = g * 255, b = b * 255, a = a }
-end
-
-M.to_rgba = function(coords)
-  return nil
-end
-
-M.convert = function(r, g, b, a)
-  return nil
-end
-
-M.hsl = function(color)
-  local h, s, l, a = color.h, color.s, color.l, color.a
-  if not h or not s or not l then
-    vim.notify("Cannot format as HSL", vim.log.levels.WARN)
-  end
-
-  local round = require("spectrolite.config").options.round_hsl
-  local points = round and 0 or 2
-  h = require("spectrolite.utils").round(h, points)
-  s = require("spectrolite.utils").round(s, points)
-  l = require("spectrolite.utils").round(l, points)
-
-  if a then
-    a = require("spectrolite.utils").round(a, 2)
-    if round then
-      return string.format("hsla(%d %d%% %d%% / %.2f)", h, s, l, a)
-    end
-    return string.format("hsla(%.2f %.2f%% %.2f%% / %.2f)", h, s, l, a)
-  end
-
-  if round then
-    return string.format("hsl(%d %d%% %d%%)", h, s, l)
-  end
-  return string.format("hsl(%.2f %.2f%% %.2f%%)", h, s, l)
-end
-
-M.format = function(hex_a)
-  return ""
-end
-
-M.round = function(h, s, l, a)
-  h = require("spectrolite.utils").round(h)
-  s = require("spectrolite.utils").round(s)
-  l = require("spectrolite.utils").round(l)
-  a = require("spectrolite.utils").round(a, 2)
-  return { h, s, l, a }
+  return {
+    h = require("spectrolite.utils").round(clr.h),
+    s = require("spectrolite.utils").round(clr.s),
+    l = require("spectrolite.utils").round(clr.l),
+    a = require("spectrolite.utils").round(clr.a, 2),
+  }
 end

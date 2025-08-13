@@ -36,18 +36,6 @@ M.checked_mode = function(mode)
   return mode
 end
 
-M.hue_to_rgb = function(temp1, temp2, tempC)
-  if 6 * tempC < 1 then
-    return temp2 + (temp1 - temp2) * tempC * 6
-  elseif 2 * tempC < 1 then
-    return temp1
-  elseif 3 * tempC < 2 then
-    return temp2 + (temp1 - temp2) * (2 / 3 - tempC) * 6
-  else
-    return temp2
-  end
-end
-
 M.get_selection = function()
   -- exit selection to finalize it
   -- vim.api.nvim_feedkeys("\27", "n", false)

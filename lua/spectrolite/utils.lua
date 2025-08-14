@@ -1,21 +1,30 @@
+---@class Spectrolite._Selection
+---@field srow number
+---@field scol number
+---@field erow number
+---@field ecol number
+
+---@class Spectrolite.Selection
+---@field srow number
+---@field scol number
+---@field erow number
+---@field ecol number
+
 local M = {}
 
+---@param num number
+---@param precision? number
+---@return number
 function M.round(num, precision)
-  if not num then
-    return nil
-  end
-
   if num % 1 == 0 then
     return num
   end
+
   local margin = math.pow(10, precision or 0)
   return math.floor(num * margin + 0.5) / margin
 end
 
-function M.check_mode(mode)
-  return mode and vim.tbl_contains(vim.tbl_keys(M.modes), mode)
-end
-
+---@return Spectrolite._Selection?
 function M.get_selection()
   -- exit selection to finalize it
   -- vim.api.nvim_feedkeys("\27", "n", false)
@@ -44,8 +53,23 @@ function M.get_selection()
     return nil
   end
 
+  return { srow = srow, scol = scol, erow = erow, ecol = ecol }
+end
+
+---@param sel Spectrolite._Selection
+---@return Spectrolite.Selection?
+function M.validate_selection(sel)
+  if not sel then
+    return nil
+  end
+
+  local srow, scol, erow, ecol = sel.srow, sel.scol, sel.erow, sel.ecol
+
+  if not srow or not scol or not erow or not ecol then
+    return nil
+  end
+
   if srow ~= erow then
-    vim.notify("Color must be on a single line", vim.log.levels.WARN)
     return nil
   end
 
@@ -63,53 +87,55 @@ function M.get_selection()
   return { srow = srow, scol = scol, erow = erow, ecol = ecol }
 end
 
-function M.read(selection)
-  if not selection then
+---@param sel Spectrolite.Selection
+---@return string?
+function M.read(sel)
+  if not sel then
     return nil
   end
 
-  local ok, text = pcall(
+  local ok, lines = pcall(
     vim.api.nvim_buf_get_text,
     0,
-    selection.srow - 1,
-    selection.scol - 1,
-    selection.erow - 1,
-    selection.ecol,
+    sel.srow - 1,
+    sel.scol - 1,
+    sel.erow - 1,
+    sel.ecol,
     {}
   )
 
-  if not ok or not text then
+  if not ok or not lines then
     return nil
   end
 
-  local line = text[1]
+  local str = lines[1]
 
-  if not line or line:gsub("%s", "") == "" then
+  if not str or str:gsub("%s", "") == "" then
     return nil
   end
 
-  return line
+  return str
 end
 
-function M.write(selection, text)
-  if not selection or not text then
-    vim.notify("Could not write to buffer", vim.log.levels.WARN)
+---@param sel Spectrolite.Selection
+---@param str string
+---@return boolean?
+function M.write(sel, str)
+  if not sel or not str then
     return nil
   end
 
   local ok = pcall(
     vim.api.nvim_buf_set_text,
     0,
-    selection.srow - 1,
-    selection.scol - 1,
-    selection.erow - 1,
-    selection.ecol,
-    { text }
+    sel.srow - 1,
+    sel.scol - 1,
+    sel.erow - 1,
+    sel.ecol,
+    { str }
   )
 
-  if not ok then
-    vim.notify("Could not write to buffer", vim.log.levels.WARN)
-  end
+  return ok
 end
 
 return M

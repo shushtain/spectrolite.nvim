@@ -1,4 +1,4 @@
----@class Spectrolite.Hexa
+---@class Spectrolite.Color.HEXA
 ---@field rx string Red Hexadecimal ["00"-"FF"]
 ---@field gx string Green Hexadecimal ["00"-"FF"]
 ---@field bx string Blue Hexadecimal ["00"-"FF"]

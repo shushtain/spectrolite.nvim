@@ -1,3 +1,5 @@
+-- TEST:
+
 local parse = require("spectrolite.parse")
 local convert = require("spectrolite.convert")
 local format = require("spectrolite.format")

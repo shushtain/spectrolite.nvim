@@ -1,4 +1,4 @@
----@class Spectrolite.Rgba
+---@class Spectrolite.Color.RGBA
 ---@field r number Red [0-255]
 ---@field g number Green [0-255]
 ---@field b number Blue [0-255]

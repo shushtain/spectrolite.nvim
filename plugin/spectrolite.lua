@@ -4,42 +4,56 @@ end
 vim.g.spectrolite_loaded = true
 
 vim.api.nvim_create_user_command("Spectrolite", function(cmd)
-  local mode
+  local model
 
   if cmd.nargs == 0 then
-    local modes = require("spectrolite.utils.math").modes
-    vim.ui.select(vim.tbl_keys(modes), {
+    local models = require("spectrolite.models").models
+    vim.ui.select(vim.tbl_keys(models), {
       prompt = "Target color space: ",
       format_item = function(opt)
-        return modes[opt].name
+        return models[opt].name
       end,
     }, function(opt)
-      mode = opt
+      model = opt
     end)
   else
-    mode = cmd.fargs[1]:gsub("%s", "")
+    model = cmd.fargs[1]:gsub("%s", "")
   end
 
-  if mode then
-    require("spectrolite").convert(mode)
+  if not model then
+    return
   end
+
+  local spectrolite = require("spectrolite")
+
+  local str_in, sel = spectrolite.read()
+  if not str_in or not sel then
+    return
+  end
+
+  local str_out = spectrolite.convert(str_in, model)
+  if not str_out then
+    return
+  end
+
+  spectrolite.write(sel, str_out)
 end, {
   nargs = "?",
   range = true,
   desc = "Convert color into target mode",
   complete = function(prefix, line, col)
-    line = line:sub(1, col):match("Spectrolite%s*([^%s]*)$")
+    line = line:sub(1, col):match("Spectrolite%s+([^%s]*)$")
     if not line then
       return {}
     end
 
-    local candidates = require("spectrolite.models.srgb.init").modes
-    candidates = vim.tbl_keys(candidates)
-    candidates = vim.tbl_filter(function(x)
+    local models = require("spectrolite.models").models
+    models = vim.tbl_keys(models)
+    models = vim.tbl_filter(function(x)
       return tostring(x):find(prefix, 1, true) == 1
-    end, candidates)
+    end, models)
 
-    table.sort(candidates)
-    return candidates
+    table.sort(models)
+    return models
   end,
 })

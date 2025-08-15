@@ -26,10 +26,20 @@
 ---@type Spectrolite.Base
 local M = {}
 
--- function M.abs(normal)
+-- ---@param normal Spectrolite.SRGB.Normal
+-- function M.globalize(normal)
 --   local abs = {}
 --   -- TODO:
+--   vim.notify("Not implemented", vim.log.levels.ERROR)
 --   return abs
+-- end
+--
+-- ---@return Spectrolite.SRGB.Normal
+-- function M.localize(abs)
+--   local normal = {}
+--   -- TODO:
+--   vim.notify("Not implemented", vim.log.levels.ERROR)
+--   return normal
 -- end
 
 return M

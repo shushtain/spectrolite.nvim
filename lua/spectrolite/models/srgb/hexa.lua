@@ -40,7 +40,7 @@ function M.normalize(color)
   }
 end
 
----@param normal Spectrolite.SRGB.Normal
+---@return Spectrolite.SRGB.HEXA
 function M.denormalize(normal)
   local utils = require("spectrolite.utils.math")
   local r = utils.round(normal.rn * 255)

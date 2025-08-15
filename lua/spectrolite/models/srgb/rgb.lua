@@ -29,7 +29,7 @@ function M.normalize(color)
   }
 end
 
----@param normal Spectrolite.SRGB.Normal
+---@return Spectrolite.SRGB.RGB
 function M.denormalize(normal)
   return {
     r = normal.rn * 255,

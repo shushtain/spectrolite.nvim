@@ -1,4 +1,0 @@
----@class Spectrolite.Color.HSL
----@field h number Hue [0-360]
----@field s number Saturation [0-100]
----@field l number Lightness [0-100]

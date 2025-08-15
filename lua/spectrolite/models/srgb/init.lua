@@ -26,10 +26,10 @@
 ---@type Spectrolite.Base
 local M = {}
 
-function M.abs(normal)
-  local abs = {}
-  -- TODO:
-  return abs
-end
+-- function M.abs(normal)
+--   local abs = {}
+--   -- TODO:
+--   return abs
+-- end
 
 return M

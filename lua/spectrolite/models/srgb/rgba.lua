@@ -42,7 +42,7 @@ function M.normalize(color)
   }
 end
 
----@param normal Spectrolite.SRGB.Normal
+---@return Spectrolite.SRGB.RGBA
 function M.denormalize(normal)
   return {
     r = normal.rn * 255,
@@ -70,8 +70,7 @@ end
 
 ---@param color Spectrolite.SRGB.RGBA
 function M.print(color, opts)
-  local percent_alpha = opts.rgba.percents.a
-  local alpha = percent_alpha and (color.a * 100 .. "%") or color.a
+  local alpha = opts.rgba.percents.a and (color.a * 100 .. "%") or color.a
 
   local sep_regular = opts.rgba.separators.regular
   local sep_alpha = opts.rgba.separators.alpha

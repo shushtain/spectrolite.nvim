@@ -15,7 +15,8 @@ local M = {}
 ---@return Spectrolite._Selection?
 function M.get_selection()
   -- exit selection to finalize it
-  -- vim.api.nvim_feedkeys("\27", "n", false)
+  vim.cmd("normal! \27")
+  vim.cmd("normal! gv")
 
   -- 1-based
   local ok_spos, spos = pcall(vim.fn.getpos, "'<")
@@ -122,6 +123,12 @@ function M.write(sel, str)
     sel.ecol,
     { str }
   )
+
+  if ok then
+    vim.fn.setpos("'<", { 0, sel.srow, sel.scol, 0 })
+    vim.fn.setpos("'>", { 0, sel.erow, sel.scol + #str - 1, 0 })
+    vim.cmd("normal! gv")
+  end
 
   return ok
 end

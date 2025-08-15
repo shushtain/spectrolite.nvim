@@ -2,6 +2,8 @@
 
 local M = {}
 
+-- FIX: UI commands should handle checks
+
 ---Read from selection. Multi-line input is not supported.
 ---Does not check if valid color is read. Use `parse()` to validate output.
 ---@return string? str Captured string. `nil` if selection is multi-line
@@ -213,13 +215,13 @@ function M.convert(str, model_out, model_in, opts)
       return nil
     end
 
-    local base_in = M.get_base(model_in)
-    local base_out = M.get_base(model_out)
-
-    normal = M.rebase(base_in, base_out, normal)
-    if not normal then
-      return nil
-    end
+    -- local base_in = M.get_base(model_in)
+    -- local base_out = M.get_base(model_out)
+    --
+    -- normal = M.rebase(base_in, base_out, normal)
+    -- if not normal then
+    --   return nil
+    -- end
 
     color = M.denormalize(model_out, normal)
     if not color then

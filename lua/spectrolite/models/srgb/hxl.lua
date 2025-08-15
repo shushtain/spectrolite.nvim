@@ -43,7 +43,7 @@ function M.normalize(color)
 
   local h = xn <= 0 and 0 or (math.pi * (color.h + 120)) / 180
 
-  local k = xn * ln(1 - ln)
+  local k = xn * ln * (1 - ln)
   local cosh = math.cos(h)
   local sinh = math.sin(h)
 

@@ -9,7 +9,7 @@ local M = {}
 
 function M.parse(str)
   local h, s, l, a = str:match(
-    "hsla?%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?[/,%s]+([%d%.]+%%?)%s*%)"
+    "hsla%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?[/,%s]+([%d%.]+%%?)%s*%)"
   )
 
   if not a then

@@ -16,7 +16,7 @@ local M = {}
 function M.get_selection()
   -- exit selection to finalize it
   vim.cmd("normal! \27")
-  vim.cmd("normal! gv")
+  -- vim.cmd("normal! gv")
 
   -- 1-based
   local ok_spos, spos = pcall(vim.fn.getpos, "'<")

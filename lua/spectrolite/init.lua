@@ -2,8 +2,6 @@
 
 local M = {}
 
--- FIX: UI commands should handle checks
-
 ---Read from selection. Multi-line input is not supported.
 ---Does not check if valid color is read. Use `parse()` to validate output.
 ---@return string? str Captured string. `nil` if selection is multi-line
@@ -79,18 +77,10 @@ end
 ---Turn color coordinates into normalized coordinates for that model group.
 ---@param model Spectrolite.Models Color model to normalize from
 ---@param color Spectrolite.Colors Color coordinates
----@return Spectrolite.Normals? normal Normalized coordinates
+---@return Spectrolite.Normals normal Normalized coordinates
 function M.normalize(model, color)
   local base = M.get_base(model)
-  local normal =
-    require("spectrolite.models." .. base .. "." .. model).normalize(color)
-
-  if not normal then
-    vim.notify("Cannot normalize " .. vim.inspect(color), vim.log.levels.WARN)
-    return nil
-  end
-
-  return normal
+  return require("spectrolite.models." .. base .. "." .. model).normalize(color)
 end
 
 ---Get base (model group) of model
@@ -101,11 +91,12 @@ function M.get_base(model)
   return models[model].base
 end
 
+---@deprecated
 ---Switch model groups by converting normalized coordinates
 ---@param base_in Spectrolite.Bases Base to switch from
 ---@param base_out Spectrolite.Bases Base to switch to
 ---@param normal Spectrolite.Normals Normalized coordinates
----@return Spectrolite.Normals? normal_out Normalized coordinates
+---@return Spectrolite.Normals normal_out Normalized coordinates
 function M.rebase(base_in, base_out, normal)
   local abs = require("spectrolite.models." .. base_in).globalize(normal)
   return require("spectrolite.models." .. base_out).localize(abs)
@@ -114,54 +105,28 @@ end
 ---Denormalize coordinates into color values of `model`.
 ---@param model Spectrolite.Models Model to convert into
 ---@param normal Spectrolite.Normals Normalized coordinates. Typically received from `normalize()`
----@return Spectrolite.Colors? color Color coordinates
+---@return Spectrolite.Colors color Color coordinates
 function M.denormalize(model, normal)
   local base = M.get_base(model)
-  local color =
-    require("spectrolite.models." .. base .. "." .. model).denormalize(normal)
-
-  if not color then
-    vim.notify(
-      "Cannot denormalize "
-        .. vim.inspect(normal)
-        .. " into model "
-        .. vim.inspect(model),
-      vim.log.levels.WARN
-    )
-    return nil
-  end
-
-  return color
+  return require("spectrolite.models." .. base .. "." .. model).denormalize(
+    normal
+  )
 end
 
 ---Format color coordinates
 ---@param model Spectrolite.Models Model of color coordinates
 ---@param color Spectrolite.Colors Color coordinates
 ---@param opts? Spectrolite.Config Temporary config overrides
----@return Spectrolite.Colors? color_out Color coordinates
+---@return Spectrolite.Colors color_out Color coordinates
 function M.format(model, color, opts)
   local options = require("spectrolite.config").config
   options = vim.tbl_deep_extend("force", options, opts or {})
 
   local base = M.get_base(model)
-  local color_out =
-    require("spectrolite.models." .. base .. "." .. model).format(
-      color,
-      options
-    )
-
-  if not color_out then
-    vim.notify(
-      "Cannot format "
-        .. vim.inspect(color)
-        .. " into model "
-        .. vim.inspect(model),
-      vim.log.levels.WARN
-    )
-    return nil
-  end
-
-  return color_out
+  return require("spectrolite.models." .. base .. "." .. model).format(
+    color,
+    options
+  )
 end
 
 ---Turn color coordinates into CSS-like string
@@ -204,43 +169,27 @@ end
 ---@return string? str_out Color in CSS-like format
 ---@return Spectrolite.Models? model_in Echoed from input or auto-defined
 function M.convert(str, model_out, model_in, opts)
-  local color, model_in = M.parse(str, model_in)
+  local color
+  color, model_in = M.parse(str, model_in)
   if not color or not model_in then
     return nil
   end
 
   if model_in ~= model_out then
     local normal = M.normalize(model_in, color)
-    if not normal then
-      return nil
-    end
 
     -- local base_in = M.get_base(model_in)
     -- local base_out = M.get_base(model_out)
-    --
     -- normal = M.rebase(base_in, base_out, normal)
-    -- if not normal then
-    --   return nil
-    -- end
 
     color = M.denormalize(model_out, normal)
-    if not color then
-      return nil
-    end
   end
 
   local options = require("spectrolite.config").config
   options = vim.tbl_deep_extend("force", options, opts or {})
 
   color = M.format(model_out, color, options)
-  if not color then
-    return nil
-  end
-
   local str_out = M.print(model_out, color, options)
-  if not str_out then
-    return nil
-  end
 
   return str_out
 end

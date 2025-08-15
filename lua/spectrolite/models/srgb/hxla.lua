@@ -18,7 +18,7 @@ local M = {}
 
 function M.parse(str)
   local h, x, l, a = str:match(
-    "hxla?%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?[/,%s]+([%d%.]+%%?)%s*%)"
+    "hxla%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?[/,%s]+([%d%.]+%%?)%s*%)"
   )
 
   if not a then
@@ -56,7 +56,7 @@ function M.normalize(color)
 
   local h = xn <= 0 and 0 or (math.pi * (color.h + 120)) / 180
 
-  local k = xn * ln(1 - ln)
+  local k = xn * ln * (1 - ln)
   local cosh = math.cos(h)
   local sinh = math.sin(h)
 

@@ -20,38 +20,14 @@
 local M = {}
 
 M.models = {
-  hex = {
-    name = "HEX",
-    base = "srgb",
-  },
-  hexa = {
-    name = "HEXA",
-    base = "srgb",
-  },
-  hsl = {
-    name = "HSL",
-    base = "srgb",
-  },
-  hsla = {
-    name = "HSLA",
-    base = "srgb",
-  },
-  hxl = {
-    name = "HXL (Cubehelix)",
-    base = "srgb",
-  },
-  hxla = {
-    name = "HXLA (Cubehelix with Alpha)",
-    base = "srgb",
-  },
-  rgb = {
-    name = "RGB",
-    base = "srgb",
-  },
-  rgba = {
-    name = "RGBA",
-    base = "srgb",
-  },
+  hex = { base = "srgb", name = "HEX" },
+  hexa = { base = "srgb", name = "HEXA" },
+  hsl = { base = "srgb", name = "HSL" },
+  hsla = { base = "srgb", name = "HSLA" },
+  hxl = { base = "srgb", name = "HXL (Cubehelix)" },
+  hxla = { base = "srgb", name = "HXLA (Cubehelix with Alpha)" },
+  rgb = { base = "srgb", name = "RGB" },
+  rgba = { base = "srgb", name = "RGBA" },
 }
 
 return M

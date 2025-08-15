@@ -7,7 +7,10 @@ vim.api.nvim_create_user_command("Spectrolite", function(cmd)
   local handle = require("spectrolite.utils.cmd").spectrolite
   if not cmd or not cmd.fargs or #cmd.fargs == 0 then
     local models = require("spectrolite.models").models
-    vim.ui.select(vim.tbl_keys(models), {
+    local entries = vim.tbl_keys(models)
+    table.sort(entries)
+
+    vim.ui.select(entries, {
       prompt = "Target color space: ",
       format_item = function(opt)
         return models[opt].name

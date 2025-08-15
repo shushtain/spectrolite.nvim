@@ -9,7 +9,7 @@ local M = {}
 
 function M.parse(str)
   local r, g, b, a = str:match(
-    "rgba?%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)[,%s]+([%d%.]+)[/,%s]+([%d%.]+%%?)%s*%)"
+    "rgba%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)[,%s]+([%d%.]+)[/,%s]+([%d%.]+%%?)%s*%)"
   )
 
   if not a then

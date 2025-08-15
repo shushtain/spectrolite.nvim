@@ -136,7 +136,7 @@ function M.format(clr)
     return nil
   end
 
-  if require("spectrolite.config").config.format.round_hsl then
+  if require("spectrolite.config.init").config.format.round_hsl then
     local h, s, l, a = M.round(clr)
     return ("hsla(%d %d%% %d%% / %.2f)"):format(h, s, l, a)
   else
@@ -151,9 +151,9 @@ function M.round(clr)
   end
 
   return {
-    h = require("spectrolite.utils").round(clr.h),
-    s = require("spectrolite.utils").round(clr.s),
-    l = require("spectrolite.utils").round(clr.l),
-    a = require("spectrolite.utils").round(clr.a, 2),
+    h = require("spectrolite.utils.math").round(clr.h),
+    s = require("spectrolite.utils.math").round(clr.s),
+    l = require("spectrolite.utils.math").round(clr.l),
+    a = require("spectrolite.utils.math").round(clr.a, 2),
   }
 end

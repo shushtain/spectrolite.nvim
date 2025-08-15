@@ -7,7 +7,7 @@ vim.api.nvim_create_user_command("Spectrolite", function(cmd)
   local mode
 
   if cmd.nargs == 0 then
-    local modes = require("spectrolite.utils").modes
+    local modes = require("spectrolite.utils.math").modes
     vim.ui.select(vim.tbl_keys(modes), {
       prompt = "Target color space: ",
       format_item = function(opt)
@@ -33,7 +33,7 @@ end, {
       return {}
     end
 
-    local candidates = require("spectrolite.modes").modes
+    local candidates = require("spectrolite.models.srgb.init").modes
     candidates = vim.tbl_keys(candidates)
     candidates = vim.tbl_filter(function(x)
       return tostring(x):find(prefix, 1, true) == 1

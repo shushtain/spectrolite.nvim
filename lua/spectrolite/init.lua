@@ -192,9 +192,7 @@ function M.convert(str, model_out, model_in, opts)
   options = vim.tbl_deep_extend("force", options, opts or {})
 
   color = M.format(model_out, color, options)
-  local str_out = M.print(model_out, color, options)
-
-  return str_out
+  return M.print(model_out, color, options)
 end
 
 ---Override default configuration.

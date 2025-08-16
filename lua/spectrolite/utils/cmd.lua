@@ -1,23 +1,15 @@
 local M = {}
 
-function M.spectrolite(model)
-  if not model then
-    return
-  end
+function M.spectrolite(str_in, model_out, sel)
+  local convert = require("spectrolite").convert
+  local write = require("spectrolite").write
 
-  local spectrolite = require("spectrolite")
-
-  local str_in, sel = spectrolite.read()
-  if not str_in or not sel then
-    return
-  end
-
-  local str_out = spectrolite.convert(str_in, model)
+  local str_out = convert(str_in, model_out)
   if not str_out then
     return
   end
 
-  spectrolite.write(sel, str_out)
+  write(sel, str_out)
 end
 
 function M.complete(prefix, line, col)

@@ -5,22 +5,36 @@ vim.g.spectrolite_loaded = true
 
 vim.api.nvim_create_user_command("Spectrolite", function(cmd)
   local handle = require("spectrolite.utils.cmd").spectrolite
-  if not cmd or not cmd.fargs or #cmd.fargs == 0 then
-    local models = require("spectrolite.models").models
-    local entries = vim.tbl_keys(models)
-    table.sort(entries)
+  local read = require("spectrolite").read
 
-    vim.ui.select(entries, {
+  local models = require("spectrolite.models").models
+  local model_keys = vim.tbl_keys(models)
+
+  local str, sel = read()
+  if not str or not sel then
+    return
+  end
+
+  if not cmd or not cmd.fargs or #cmd.fargs == 0 then
+    table.sort(model_keys)
+    vim.ui.select(model_keys, {
       prompt = "Target color space: ",
       format_item = function(opt)
         return models[opt].name
       end,
     }, function(choice)
-      handle(choice)
+      if choice then
+        handle(str, choice, sel)
+      end
     end)
-    return
+  else
+    local model = cmd.fargs[1]:gsub("%s", "")
+    if not vim.tbl_contains(model_keys, model) then
+      vim.notify("Model " .. model .. " is not supported", vim.log.levels.WARN)
+      return
+    end
+    handle(str, model, sel)
   end
-  handle(cmd.fargs[1]:gsub("%s", ""))
 end, {
   nargs = "?",
   range = true,

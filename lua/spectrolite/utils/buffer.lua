@@ -48,10 +48,6 @@ end
 ---@param sel Spectrolite._Selection
 ---@return Spectrolite.Selection?
 function M.validate_selection(sel)
-  if not sel then
-    return nil
-  end
-
   local srow, scol, erow, ecol = sel.srow, sel.scol, sel.erow, sel.ecol
 
   if not srow or not scol or not erow or not ecol then
@@ -68,10 +64,6 @@ function M.validate_selection(sel)
     return nil
   end
   ecol = math.min(ecol, #line)
-
-  -- if ecol < scol then
-  --   scol, ecol = ecol, scol
-  -- end
 
   return { srow = srow, scol = scol, erow = erow, ecol = ecol }
 end

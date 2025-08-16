@@ -17,7 +17,10 @@ function M.read()
 
   local selection = utils.validate_selection(sel)
   if not selection then
-    vim.notify("Cannot validate selection", vim.log.levels.WARN)
+    vim.notify(
+      "Cannot validate selection. Make sure it's single-line",
+      vim.log.levels.WARN
+    )
     return nil
   end
 

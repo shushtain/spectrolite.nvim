@@ -76,9 +76,8 @@ function M.format(color, opts)
 end
 
 ---@param color Spectrolite.SRGB.HEXA
-function M.print(color, opts)
-  local symbol = opts.hexa.symbol and "#" or ""
-  return symbol .. color.rx .. color.gx .. color.bx .. color.ax
+function M.print(color)
+  return "#" .. color.rx .. color.gx .. color.bx .. color.ax
 end
 
 return M

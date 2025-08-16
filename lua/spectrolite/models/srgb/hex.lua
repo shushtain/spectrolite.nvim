@@ -7,7 +7,7 @@
 local M = {}
 
 function M.parse(str)
-  local hex = str:match("#(%x+)")
+  local hex = str:match("#?(%x+)")
   local rx, gx, bx
 
   if hex and #hex == 3 then
@@ -69,8 +69,9 @@ function M.format(color, opts)
 end
 
 ---@param color Spectrolite.SRGB.HEX
-function M.print(color)
-  return "#" .. color.rx .. color.gx .. color.bx
+function M.print(color, opts)
+  local symbol = opts.hexa.symbol and "#" or ""
+  return symbol .. color.rx .. color.gx .. color.bx
 end
 
 return M

@@ -120,6 +120,7 @@ function M.write(sel, str)
     vim.fn.setpos("'<", { 0, sel.srow, sel.scol, 0 })
     vim.fn.setpos("'>", { 0, sel.erow, sel.scol + #str - 1, 0 })
     vim.cmd("normal! gv")
+    vim.cmd("normal! \27")
   end
 
   return ok

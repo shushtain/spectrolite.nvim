@@ -6,6 +6,7 @@
 
 ---@class Spectrolite.Config.HEXA
 ---@field uppercase? boolean If `true`, uppercase values. Default is `false`
+---@field symbol? boolean If `true`, prefix string with "#". Default is `true`
 
 ---@class Spectrolite.Config.HSLA
 ---@field round? Spectrolite.Config.HSLA.Round
@@ -63,6 +64,7 @@ local M = {}
 M.config = {
   hexa = {
     uppercase = false,
+    symbol = true,
   },
   hsla = {
     round = { h = 0, s = 0, l = 0, a = 2 },

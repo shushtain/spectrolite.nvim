@@ -2,7 +2,7 @@
 
 A color converter plugin.
 
-![Example](https://raw.githubusercontent.com/shushtain/spectrolite.nvim/refs/heads/main/example.gif)
+![Example](https://github.com/shushtain/spectrolite.nvim/blob/main/example.gif)
 
 > Colored dots are from a separate plugin. CursorLine color change is described below, in [Usage: Advanced](#advanced).
 

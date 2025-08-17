@@ -18,7 +18,7 @@ vim.api.nvim_create_user_command("Spectrolite", function(cmd)
   if not cmd or not cmd.fargs or #cmd.fargs == 0 then
     table.sort(model_keys)
     vim.ui.select(model_keys, {
-      prompt = "Target color space: ",
+      prompt = "Target color model",
       format_item = function(opt)
         return models[opt].name
       end,

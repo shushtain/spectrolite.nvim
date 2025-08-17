@@ -1,30 +1,285 @@
-*spectrolite.nvim* Convert colors between RGB-based color spaces.
+*spectrolite.txt*                                              Color converter
 
-===============================================================================
-USAGE                                                       *spectrolite-usage*
+                                       Type |gO| to see the table of contents.
 
-Select the color and run the command.
+==============================================================================
+CONFIG                                                    *spectrolite-config*
+
+Setup is optional and used only to override default configuration:
+
+>
+    require("spectrolite").setup({
+      hexa = {
+        uppercase = false,
+        symbol = true,
+      },
+      hsla = {
+        round = { h = 0, s = 0, l = 0, a = 2 },
+        percents = { s = false, l = false, a = false },
+        separators = { regular = " ", alpha = " / " },
+      },
+      hxla = {
+        round = { h = 0, x = 0, l = 0, a = 2 },
+        percents = { x = false, l = false, a = false },
+        separators = { regular = " ", alpha = " / " },
+      },
+      rgba = {
+        round = { r = 0, g = 0, b = 0, a = 2 },
+        percents = { a = false },
+        separators = { regular = " ", alpha = " / " },
+      },
+    })
+<
+
+If you have LSP for Lua, you will get completion and hover docs.
+In case your table is detached from `setup()`, prepend it with
+`---@type Spectrolite.Config` to get the hints.
+
+                                                *spectrolite-config#uppercase*
+uppercase ~
+
+If `true`, uppercase values.
+
+                                                   *spectrolite-config#symbol*
+symbol ~
+
+If `true`, prefix HEX(A) string with `#`.
+
+                                                    *spectrolite-config#round*
+round ~
+
+If not `false`, round to `<number>` decimal places.
+
+                                                 *spectrolite-config#percents*
+percents ~
+
+If `true`, add `%` to value.
+
+                                               *spectrolite-config#separators*
+separators ~
+
+These are put between values as is, so don't forget spaces!
+Setting this to `""` or `false` will output `hsl(360100%20%)`. 
+
+==============================================================================
+USAGE                                                      *spectrolite-usage*
+
+                                                     *spectrolite-usage#Basic*
+Basic ~
+
+If you want to convert colors within the buffer using your setup or defaults,
+select the color and call `:Spectrolite` or create a keymap:
+
+>
+    vim.keymap.set({ "n", "x" }, "<leader>cc", "<cmd> Spectrolite <CR>")
+    vim.keymap.set({ "n", "x" }, "<leader>ch", "<cmd> Spectrolite hex <CR>")
+    vim.keymap.set({ "n", "x" }, "<leader>cs", "<cmd> Spectrolite hsl <CR>")
+<
+
+If you want this to work only on the current selection, not the last one,
+just don't set `"n"` in the modes table. The first command will offer you
+choices for the target mode. See |spectrolite-commands#Spectrolite|
+
+                                                  *spectrolite-usage#Advanced*
+Advanced ~
+
+You can use this plugin to extend capabilities of your editor's UI,
+create snippets that convert colors, send colors to other plugins, etc.
+
+Here is a silly example of changing CursorLine:
+
+>
+    vim.keymap.set("x", "<leader>c/", function()
+      local sp = require("spectrolite")
+
+      -- read from selection
+      local str = sp.read()
+      if not str then return end
+
+      -- convert into HEX
+      local color = sp.convert(str, "hex") 
+      if not color then return end
+
+      -- update CursorLine
+      vim.api_set_hl(0, "CursorLine", { bg = color })
+    end)
+<
+
+See |spectrolite-functions| to learn more.
+
+==============================================================================
+COMMANDS                                                *spectrolite-commands*
+
+                                            *spectrolite-commands#Spectrolite*
+Spectrolite ~
+
+This is the main command that captures the color from selection, converts it
+into one of the modes, and replaces the selection with output. Formatting
+honors your `setup()` or defaults.
+
+The command accepts range to avoid errors, but uses its custom logic to read
+from the buffer. It works on the current selection if called in `visual` mode,
+and on the last selection in the `normal` mode.
+
+Use `:Spectrolite <model>` to convert into specific, known color model,
+or just `:Spectrolite` to select the color model from the list.
+
+==============================================================================
+FUNCTIONS                                              *spectrolite-functions*
+
+                                               *spectrolite-functions#convert*
+convert() ~
+
+Convert between color models.
+
+>
+    ---@param str string Color in CSS-like format.
+    ---@param model_out Spectrolite.Models Color model to convert into
+    ---@param model_in? Spectrolite.Models Color model to convert from
+    ---@param opts? Spectrolite.Config Temporary config overrides
+    ---@return string? str_out
+    ---@return Spectrolite.Models? model_in
+<
+
+This is a combination of simpler functions described later. Unlike the main
+`:Spectrolite` command, it doesn't read from the buffer, and doesn't replace
+selection with the output. It is primarely for converting strings you already
+have to strings you need elsewhere.
+
+For example, you could capture text width of the buffer, put it inside `hue`
+coordinate of `hsl` color, pass it to this function, and receive `hex` string 
+that can be passed into `colorcolumn` highlight. The wider the text width,
+the more relaxed and chilled out the column will be :)
+
+                                                  *spectrolite-functions#read*
+read() ~
+
+Read from current/last selection. Multi-line input is not supported.
+Does not check if valid color is read. Use `parse()` to validate output.
+
+>
+    ---@return string?
+    ---@return Spectrolite.Selection?
+<
+
+                                                 *spectrolite-functions#parse*
+parse() ~
+
+Parse `str` into color coordinates with no conversion.
+If `model` is present, `str` must represent that model.
+If `model` is omitted / `nil`, try against each available.
+
+>
+    ---@param str string Color in CSS-like format
+    ---@param model? Spectrolite.Models Color model to parse into
+    ---@return Spectrolite.Colors? color
+    ---@return Spectrolite.Models? model
+<
+
+Use `print(vim.inspect(color))` on the `color` you get from this function
+to check what fields are available for each color. For example, where RGB
+would return `{ r = 255, ... }`, HEX returns `{ rx = "ff", ... }`.
+
+                                             *spectrolite-functions#normalize*
+normalize() ~
+
+Turn color coordinates into normalized coordinates for that model group.
+
+>
+    ---@param model Spectrolite.Models Color model to normalize from
+    ---@param color Spectrolite.Colors Color coordinates
+    ---@return Spectrolite.Normals normal
+<
+
+Use `print(vim.inspect(normal))` on the `normal` you get from this function
+to check what fields are available for each model. For example, HSL is in sRGB
+model group, so you will find fields `rn`, `gn`, `bn` with `0-1` values.
+
+                                              *spectrolite-functions#get_base*
+get_base() ~
+
+Get base (model group) of model.
+
+>
+    ---@param model Spectrolite.Models
+    ---@return Spectrolite.Bases base
+<
+
+Usually, you don't need this function on its own, unless you plan to manually
+`rebase()` normals from one model group to another. While only sRGB models
+are implemented, this will always return `"srgb"`.
+
+                                                *spectrolite-functions#rebase*
+rebase() ~
+
+Switch model groups by converting normalized coordinates.
+
+>
+    ---@param base_in Spectrolite.Bases Base to switch from
+    ---@param base_out Spectrolite.Bases Base to switch to
+    ---@param normal Spectrolite.Normals Normalized coordinates
+    ---@return Spectrolite.Normals normal_out
+<
+
+While only sRGB models are implemented, this returns the `normal` you pass in.
+This function will be useful once at least one CIELAB model is implemented.
+
+                                           *spectrolite-functions#denormalize*
+denormalize() ~
+
+Denormalize coordinates into color values of `model`.
+
+>
+    ---@param model Spectrolite.Models Model to convert into
+    ---@param normal Spectrolite.Normals Normalized coordinates
+    ---@return Spectrolite.Colors color
+<
+
+                                                *spectrolite-functions#format*
+format() ~
+
+Format color coordinates.
+
+>
+    ---@param model Spectrolite.Models Model of color coordinates
+    ---@param color Spectrolite.Colors Color coordinates
+    ---@param opts? Spectrolite.Config Temporary config overrides
+    ---@return Spectrolite.Colors color_out
+<
+
+This still returns a table of coordinates. Use `print()` to get a string.
+Options like `round` and HEX(A)'s `uppercase` are applied here.
+
+                                                 *spectrolite-functions#print*
+print() ~
+
+Turn color coordinates into CSS-like string
+
+>
+    ---@param model Spectrolite.Models Model of color coordinates
+    ---@param color Spectrolite.Colors Color coordinates
+    ---@param opts? Spectrolite.Config Temporary config overrides
+    ---@return string str
+<
+
+Only options necessary for table-to-string conversion are applied here.
+Use `format()` beforehand to apply `round` and `uppercase` options.
+
+                                                 *spectrolite-functions#write*
+write() ~
+
+Replace selected area with `str`. Meant to be used only with validated
+selection from `read()`.
+
+>
+    ---@param selection Spectrolite.Selection Validated selection
+    ---@param str string Color in CSS-like format
+    ---@return boolean? status
+<
+
+Returns `true` if written, `false` if tried, `nil` if missing arguments.
+Don't pass custom selection unless you've seen source code and know what
+you are doing. Unfortunately, APIs differ in indexing lines and columns. 
 
 
-===============================================================================
-COMMANDS                                                 *spectrolite-commands*
-
-- `SpectroliteHex`
-  Convert the current color to HEX(A).
-
-- `SpectroliteRgb`
-  Convert the current color to RGB(A).
-
-- `SpectroliteHsl`
-  Convert the current color to HSL(A).
-
-- `SpectroliteHxl`
-  Convert the current color to Cubehelix.
-
-
-===============================================================================
-LICENSE                                                   *spectrolite-license*
-
-MIT License.
-
-vim:tw=78:ts=8:noet:ft=help:norl:
+vim:tw=78:ts=8:ft=help:norl:

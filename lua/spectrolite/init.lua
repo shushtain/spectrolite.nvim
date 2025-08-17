@@ -94,13 +94,16 @@ function M.get_base(model)
   return models[model].base
 end
 
----@deprecated
 ---Switch model groups by converting normalized coordinates
 ---@param base_in Spectrolite.Bases Base to switch from
 ---@param base_out Spectrolite.Bases Base to switch to
 ---@param normal Spectrolite.Normals Normalized coordinates
 ---@return Spectrolite.Normals normal_out Normalized coordinates
 function M.rebase(base_in, base_out, normal)
+  if base_in == base_out then
+    return normal
+  end
+
   local abs = require("spectrolite.models." .. base_in).globalize(normal)
   return require("spectrolite.models." .. base_out).localize(abs)
 end

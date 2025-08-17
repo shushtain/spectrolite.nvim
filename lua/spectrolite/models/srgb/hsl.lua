@@ -104,7 +104,7 @@ function M.print(color, opts)
   local saturation = color.s .. (opts.hsla.percents.s and "%" or "")
   local lightness = color.l .. (opts.hsla.percents.l and "%" or "")
 
-  local sep_regular = opts.hsla.separators.regular
+  local sep_regular = opts.hsla.separators.regular or ""
 
   return "hsl("
     .. color.h

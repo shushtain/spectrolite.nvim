@@ -1,72 +1,94 @@
-# Spectrolite
+# Spectrolite for Neovim
 
-Converter for RGB-based color spaces.
+A color converter plugin.
 
-> Polished spectrolite lets the colors play.  
-> Please polish this plugin.
+![Example](https://raw.githubusercontent.com/shushtain/spectrolite.nvim/refs/heads/main/example.gif)
+
+> Colored dots are from a separate plugin. CursorLine color change is described below, in [Usage: Advanced](#advanced).
 
 ## Features
 
-- Converts between HEX, RGB, HSL, and Cubehelix color spaces.
-- Supports alpha channels for all the color spaces listed above.
-- Has options to format lowercase HEX, round HSL and Cubehelix.
+- Converts between HEX, RGB, HSL, and HXL/Cubehelix color models.
+- Supports alpha channel for all the color models listed above.
+- Has extensive formatting options based on CSS-like representation.
 
-> For more information about the Cubehelix color space, look for [Dave Green's Cubehelix](https://people.phy.cam.ac.uk/dag9/CUBEHELIX/#Paper). The specific implementation of Cubehelix for this plugin is described below.
+## Setup
 
-## Config
+Setup is optional and used only to override default configuration.
 
-Here is my config using Lazy:
+Here is an example using Lazy, with all the defaults:
 
 ```lua
 return {
   "shushtain/spectrolite.nvim",
   config = function()
     require("spectrolite").setup({
-      lower_hex = false,
-      round_hsl = true,
-      round_hxl = true,
+      hexa = {
+        uppercase = false,
+        symbol = true,
+      },
+      hsla = {
+        round = { h = 0, s = 0, l = 0, a = 2 },
+        percents = { s = false, l = false, a = false },
+        separators = { regular = " ", alpha = " / " },
+      },
+      hxla = {
+        round = { h = 0, x = 0, l = 0, a = 2 },
+        percents = { x = false, l = false, a = false },
+        separators = { regular = " ", alpha = " / " },
+      },
+      rgba = {
+        round = { r = 0, g = 0, b = 0, a = 2 },
+        percents = { a = false },
+        separators = { regular = " ", alpha = " / " },
+      },
     })
-    vim.keymap.set({ "n", "v" }, "<leader>#h", "<cmd> SpectroliteHex <CR>")
-    vim.keymap.set({ "n", "v" }, "<leader>#r", "<cmd> SpectroliteRgb <CR>")
-    vim.keymap.set({ "n", "v" }, "<leader>#s", "<cmd> SpectroliteHsl <CR>")
-    vim.keymap.set({ "n", "v" }, "<leader>#x", "<cmd> SpectroliteHxl <CR>")
   end
 }
 ```
 
-Defaults are:
+## Usage
 
-- `lower_hex = false`
-- `round_hsl = true`
-- `round_hxl = true`
+### Basic
 
-No keymaps are set internally.
+If you just want to convert colors within the buffer, select the color and call `:Spectrolite`. This will prompt you to select the target color model (what to convert into). The current model will be defined automagically. If you want to skip model selection, use `:Spectrolite <model>`, like `:Spectrolite hsl`.
 
-> I've switched to Neovim quite recently. For the lack of skill, I don't have an example for setting up Packer.
+You could also create keymaps (none are set by default):
 
-## Cubehelix?
+```lua
+vim.keymap.set({ "n", "x" }, "<leader>cc", "<cmd> Spectrolite <CR>")
+vim.keymap.set({ "n", "x" }, "<leader>ch", "<cmd> Spectrolite hex <CR>")
+vim.keymap.set({ "n", "x" }, "<leader>cs", "<cmd> Spectrolite hsl <CR>")
+vim.keymap.set({ "n", "x" }, "<leader>cx", "<cmd> Spectrolite hxl <CR>")
+vim.keymap.set({ "n", "x" }, "<leader>cr", "<cmd> Spectrolite rgb <CR>")
+```
 
-Cubehelix colors, in modern terms, are described by `hue`, `saturation`, and `lightness`. Although max `saturation` for some colors can be close to `500%`, the real value of this color space lies in colors with `saturation` up to `100%`. As long as you are within this range, colors of any `hue` keep constant _(accessibility)_ contrast between their `lightness` values.
+With `"n"` the plugin will be able to run on the last converted color instead of having to select it again manually. If you don't want this feature, set only `"x"` (for visual mode).
 
-> Since the name of this color space is much longer, and the `saturation` values are quite different from both HSL and (ok)LCH, I've chosen to specify it as `hxl`.
+### Advanced
 
-![Color spaces](https://raw.githubusercontent.com/shushtain/spectrolite.nvim/refs/heads/main/example1.jpg)
+For advanced operations, refer to `:h spectrolite-functions`.
 
-For example, a button with the background of `(240, 100%, 30%)` and the text of `(240, 100%, 90%)` will measure to the same color accessibility contrast as a button with the background of `(160, 50%, 30%)` and the text of `(160, 100%, 90%)`.
+You can use this plugin to extend capabilities of your editor's UI, create snippets that convert colors, send colors to other plugins, etc. Here is a silly example of changing CursorLine:
 
-![Example](https://raw.githubusercontent.com/shushtain/spectrolite.nvim/refs/heads/main/example2.jpg)
+```lua
+vim.keymap.set("x", "<leader>c/", function()
+  local sp = require("spectrolite")
 
-I typically set `saturation 110%` for signal (error, warning) colors. The clipping (which leads to contrast mutations) is minimal.
+  -- read from selection
+  local str = sp.read()
+  if not str then return end
+
+  -- convert into HEX
+  local color = sp.convert(str, "hex")
+  if not color then return end
+
+  -- update CursorLine
+  vim.api_set_hl(0, "CursorLine", { bg = color })
+end)
+```
 
 ## Credits
 
 - [Dave Green's Cubehelix](https://people.phy.cam.ac.uk/dag9/CUBEHELIX/#Paper)
 - [NTBBloodbath's Color Converter](https://github.com/NTBBloodbath/color-converter.nvim)
-
-## Contributing
-
-I'm not sure I can handle more Lua for now.  
-Just make a flawless version for me to switch to.
-
-> Are you ready to DeepSeek for your life?  
-> Good luck! And **don't** fork it up!

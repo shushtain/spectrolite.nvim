@@ -14,10 +14,10 @@
 ---@field separators? Spectrolite.Config.Common.Separators
 
 ---@class Spectrolite.Config.HSLA.Round
----@field h? number If not `nil`, round to `<number>` decimal places. Default is `0`
----@field s? number If not `nil`, round to `<number>` decimal places. Default is `0`
----@field l? number If not `nil`, round to `<number>` decimal places. Default is `0`
----@field a? number If not `nil`, round to `<number>` decimal places. Default is `2`
+---@field h? number If not `false`, round to `<number>` decimal places. Default is `0`
+---@field s? number If not `false`, round to `<number>` decimal places. Default is `0`
+---@field l? number If not `false`, round to `<number>` decimal places. Default is `0`
+---@field a? number If not `false`, round to `<number>` decimal places. Default is `2`
 
 ---@class Spectrolite.Config.HSLA.Percents
 ---@field s? boolean If `true`, add "%" to value. Default is `false`
@@ -30,10 +30,10 @@
 ---@field separators? Spectrolite.Config.Common.Separators
 
 ---@class Spectrolite.Config.HXLA.Round
----@field h? number If not `nil`, round to `<number>` decimal places. Default is `0`
----@field x? number If not `nil`, round to `<number>` decimal places. Default is `0`
----@field l? number If not `nil`, round to `<number>` decimal places. Default is `0`
----@field a? number If not `nil`, round to `<number>` decimal places. Default is `2`
+---@field h? number If not `false`, round to `<number>` decimal places. Default is `0`
+---@field x? number If not `false`, round to `<number>` decimal places. Default is `0`
+---@field l? number If not `false`, round to `<number>` decimal places. Default is `0`
+---@field a? number If not `false`, round to `<number>` decimal places. Default is `2`
 
 ---@class Spectrolite.Config.HXLA.Percents
 ---@field x? boolean If `true`, add "%" to value. Default is `false`
@@ -46,10 +46,10 @@
 ---@field separators? Spectrolite.Config.Common.Separators
 
 ---@class Spectrolite.Config.RGBA.Round
----@field r? number If not `nil`, round to `<number>` decimal places. Default is `0`
----@field g? number If not `nil`, round to `<number>` decimal places. Default is `0`
----@field b? number If not `nil`, round to `<number>` decimal places. Default is `0`
----@field a? number If not `nil`, round to `<number>` decimal places. Default is `2`
+---@field r? number If not `false`, round to `<number>` decimal places. Default is `0`
+---@field g? number If not `false`, round to `<number>` decimal places. Default is `0`
+---@field b? number If not `false`, round to `<number>` decimal places. Default is `0`
+---@field a? number If not `false`, round to `<number>` decimal places. Default is `2`
 
 ---@class Spectrolite.Config.RGBA.Percents
 ---@field a? boolean If `true`, print in percents. Default is `false`

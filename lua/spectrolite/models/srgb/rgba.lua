@@ -72,8 +72,8 @@ end
 function M.print(color, opts)
   local alpha = opts.rgba.percents.a and (color.a * 100 .. "%") or color.a
 
-  local sep_regular = opts.rgba.separators.regular
-  local sep_alpha = opts.rgba.separators.alpha
+  local sep_regular = opts.rgba.separators.regular or ""
+  local sep_alpha = opts.rgba.separators.alpha or ""
 
   return "rgba("
     .. color.r

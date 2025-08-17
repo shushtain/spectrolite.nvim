@@ -41,7 +41,7 @@ function M.normalize(color)
     return { rn = 1, gn = 1, bn = 1, an = an }
   end
 
-  local h = xn <= 0 and 0 or (math.pi * (color.h + 120)) / 180
+  local h = xn <= 0 and 0 or ((math.pi * (color.h + 120)) / 180)
 
   local k = xn * ln * (1 - ln)
   local cosh = math.cos(h)
@@ -103,7 +103,7 @@ function M.print(color, opts)
   local saturation = color.x .. (opts.hxla.percents.x and "%" or "")
   local lightness = color.l .. (opts.hxla.percents.l and "%" or "")
 
-  local sep_regular = opts.hxla.separators.regular
+  local sep_regular = opts.hxla.separators.regular or ""
 
   return "hxl("
     .. color.h

@@ -120,8 +120,8 @@ function M.print(color, opts)
   local lightness = color.l .. (opts.hsla.percents.l and "%" or "")
   local alpha = opts.hsla.percents.a and (color.a * 100 .. "%") or color.a
 
-  local sep_regular = opts.hsla.separators.regular
-  local sep_alpha = opts.hsla.separators.alpha
+  local sep_regular = opts.hsla.separators.regular or ""
+  local sep_alpha = opts.hsla.separators.alpha or ""
 
   return "hsla("
     .. color.h

@@ -55,7 +55,7 @@ end
 
 ---@param color Spectrolite.SRGB.RGB
 function M.print(color, opts)
-  local sep_regular = opts.rgba.separators.regular
+  local sep_regular = opts.rgba.separators.regular or ""
   return "rgb("
     .. color.r
     .. sep_regular

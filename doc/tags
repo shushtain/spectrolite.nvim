@@ -2,6 +2,7 @@ spectrolite-commands	spectrolite.txt	/*spectrolite-commands*
 spectrolite-commands#Spectrolite	spectrolite.txt	/*spectrolite-commands#Spectrolite*
 spectrolite-config	spectrolite.txt	/*spectrolite-config*
 spectrolite-config#percents	spectrolite.txt	/*spectrolite-config#percents*
+spectrolite-config#quiet	spectrolite.txt	/*spectrolite-config#quiet*
 spectrolite-config#round	spectrolite.txt	/*spectrolite-config#round*
 spectrolite-config#separators	spectrolite.txt	/*spectrolite-config#separators*
 spectrolite-config#symbol	spectrolite.txt	/*spectrolite-config#symbol*

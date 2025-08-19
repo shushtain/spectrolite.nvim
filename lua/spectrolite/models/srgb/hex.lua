@@ -1,4 +1,4 @@
----@class Spectrolite.SRGB.HEX: Spectrolite.SRGB.Colors
+---@class Spectrolite.SRGB.HEX
 ---@field rx string Red Hexadecimal ["%x%x"]
 ---@field gx string Green Hexadecimal ["%x%x"]
 ---@field bx string Blue Hexadecimal ["%x%x"]

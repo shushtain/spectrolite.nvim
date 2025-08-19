@@ -1,4 +1,4 @@
----@class Spectrolite.SRGB.HXLA: Spectrolite.SRGB.Colors
+---@class Spectrolite.SRGB.HXLA
 ---@field h number Hue [0-360]
 ---@field x number Saturation [0-100+]
 ---@field l number Lightness [0-100]

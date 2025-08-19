@@ -9,6 +9,7 @@ Setup is optional and used only to override default configuration:
 
 >
     require("spectrolite").setup({
+      quiet = false,
       hexa = {
         uppercase = false,
         symbol = true,
@@ -34,6 +35,13 @@ Setup is optional and used only to override default configuration:
 If you have LSP for Lua, you will get completion and hover docs.
 In case your table is detached from `setup()`, prepend it with
 `---@type Spectrolite.Config` to get the hints.
+
+                                                    *spectrolite-config#quiet*
+quiet ~
+
+If `true`, don't emit warnings from functions. Will still show warnings
+for commands, since these are meant to be used interactivelly while
+functions in some internal scripts may require quiet execution.
 
                                                 *spectrolite-config#uppercase*
 uppercase ~
@@ -158,6 +166,7 @@ Read from current/last selection. Multi-line input is not supported.
 Does not check if valid color is read. Use `parse()` to validate output.
 
 >
+    ---@param opts? Spectrolite.Config Temporary config overrides
     ---@return string?
     ---@return Spectrolite.Selection?
 <
@@ -172,6 +181,7 @@ If `model` is omitted / `nil`, try against each available.
 >
     ---@param str string Color in CSS-like format
     ---@param model? Spectrolite.Models Color model to parse into
+    ---@param opts? Spectrolite.Config Temporary config overrides
     ---@return Spectrolite.Colors? color
     ---@return Spectrolite.Models? model
 <
@@ -188,6 +198,7 @@ Turn color coordinates into normalized coordinates for that model group.
 >
     ---@param model Spectrolite.Models Color model to normalize from
     ---@param color Spectrolite.Colors Color coordinates
+    ---@param opts? Spectrolite.Config Temporary config overrides
     ---@return Spectrolite.Normals normal
 <
 
@@ -202,6 +213,7 @@ Get base (model group) of model.
 
 >
     ---@param model Spectrolite.Models
+    ---@param opts? Spectrolite.Config Temporary config overrides
     ---@return Spectrolite.Bases base
 <
 
@@ -218,6 +230,7 @@ Switch model groups by converting normalized coordinates.
     ---@param base_in Spectrolite.Bases Base to switch from
     ---@param base_out Spectrolite.Bases Base to switch to
     ---@param normal Spectrolite.Normals Normalized coordinates
+    ---@param opts? Spectrolite.Config Temporary config overrides
     ---@return Spectrolite.Normals normal_out
 <
 
@@ -232,6 +245,7 @@ Denormalize coordinates into color values of `model`.
 >
     ---@param model Spectrolite.Models Model to convert into
     ---@param normal Spectrolite.Normals Normalized coordinates
+    ---@param opts? Spectrolite.Config Temporary config overrides
     ---@return Spectrolite.Colors color
 <
 
@@ -274,6 +288,7 @@ selection from `read()`.
 >
     ---@param selection Spectrolite.Selection Validated selection
     ---@param str string Color in CSS-like format
+    ---@param opts? Spectrolite.Config Temporary config overrides
     ---@return boolean? status
 <
 

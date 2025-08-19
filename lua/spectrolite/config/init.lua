@@ -1,4 +1,5 @@
 ---@class Spectrolite.Config
+---@field quiet? boolean If `true`, don't emit warnings from functions. Default is `false`
 ---@field hexa? Spectrolite.Config.HEXA Options for HEX(A)
 ---@field hsla? Spectrolite.Config.HSLA Options for HSL(A)
 ---@field hxla? Spectrolite.Config.HXLA Options for Cubehelix (with Alpha)
@@ -62,6 +63,7 @@ local M = {}
 
 ---@type Spectrolite.Config
 M.config = {
+  quiet = false,
   hexa = {
     uppercase = false,
     symbol = true,

@@ -1,4 +1,4 @@
----@class Spectrolite.SRGB.HEXA: Spectrolite.SRGB.Colors
+---@class Spectrolite.SRGB.HEXA
 ---@field rx string Red Hexadecimal ["%x%x"]
 ---@field gx string Green Hexadecimal ["%x%x"]
 ---@field bx string Blue Hexadecimal ["%x%x"]
@@ -8,21 +8,21 @@
 local M = {}
 
 function M.parse(str)
-  local hex = str:match("#?(%x+)")
+  local hexa = str:match("#?(%x+)")
   local rx, gx, bx, ax
 
-  if hex and #hex == 4 then
-    rx = hex:sub(1, 1):rep(2)
-    gx = hex:sub(2, 2):rep(2)
-    bx = hex:sub(3, 3):rep(2)
-    ax = hex:sub(4, 4):rep(2)
+  if hexa and #hexa == 4 then
+    rx = hexa:sub(1, 1):rep(2)
+    gx = hexa:sub(2, 2):rep(2)
+    bx = hexa:sub(3, 3):rep(2)
+    ax = hexa:sub(4, 4):rep(2)
   end
 
-  if hex and #hex == 8 then
-    rx = hex:sub(1, 2)
-    gx = hex:sub(3, 4)
-    bx = hex:sub(5, 6)
-    ax = hex:sub(7, 8)
+  if hexa and #hexa == 8 then
+    rx = hexa:sub(1, 2)
+    gx = hexa:sub(3, 4)
+    bx = hexa:sub(5, 6)
+    ax = hexa:sub(7, 8)
   end
 
   if rx and gx and bx and ax then

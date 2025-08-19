@@ -8,8 +8,11 @@
 ---@field b_star number b* Coordinate [CIELAB]
 ---@field alpha number Alpha channel [0-1]
 
----@class Spectrolite.Normals
----@class Spectrolite.Colors
+---@alias Spectrolite.Normals
+---| Spectrolite.SRGB.Normal
+
+---@alias Spectrolite.Colors
+---| Spectrolite.SRGB.Colors
 
 ---@alias Spectrolite.Models
 ---| Spectrolite.SRGB.Models

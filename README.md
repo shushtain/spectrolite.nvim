@@ -14,7 +14,7 @@ A color converter plugin.
 
 ## Setup
 
-Setup is optional and used only to override default configuration.
+Setup is optional and used only to override default configuration. More information about config options is available in LSP hovers and `:h spectrolite...`
 
 Here is an example using Lazy, with all the defaults:
 
@@ -23,6 +23,7 @@ return {
   "shushtain/spectrolite.nvim",
   config = function()
     require("spectrolite").setup({
+      quiet = false,
       hexa = {
         uppercase = false,
         symbol = true,

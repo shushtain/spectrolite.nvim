@@ -25,6 +25,13 @@ function M.normalize(color)
   local ln = color.l / 100
   local an = 1
 
+  if ln <= 0 then
+    return { rn = 0, gn = 0, bn = 0, an = an }
+  end
+  if ln >= 1 then
+    return { rn = 1, gn = 1, bn = 1, an = an }
+  end
+
   if sn == 0 then
     return { rn = ln, gn = ln, bn = ln, an = an }
   end

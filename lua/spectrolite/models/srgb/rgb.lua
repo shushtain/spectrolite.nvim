@@ -15,6 +15,10 @@ function M.parse(str)
   b = tonumber(b)
 
   if r and g and b then
+    r = math.min(255, math.max(0, r))
+    g = math.min(255, math.max(0, g))
+    b = math.min(255, math.max(0, b))
+
     return { r = r, g = g, b = b }
   end
 end

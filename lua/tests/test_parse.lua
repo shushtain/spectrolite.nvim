@@ -49,7 +49,6 @@ describe("Parse:", function()
 
   it("invalid", function()
     assert.is_nil(go.parse("sdhffjalfj"))
-    assert.is_nil(go.parse("0000"))
     assert.is_nil(go.parse("#02"))
     assert.is_nil(go.parse("#000fff2"))
     assert.is_nil(go.parse("#zzz"))

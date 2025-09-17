@@ -28,6 +28,10 @@ function M.parse(str)
   end
 
   if r and g and b and a then
+    r = math.min(255, math.max(0, r))
+    g = math.min(255, math.max(0, g))
+    b = math.min(255, math.max(0, b))
+
     return { r = r, g = g, b = b, a = a }
   end
 end

@@ -43,6 +43,9 @@ return {
         percents = { a = false },
         separators = { regular = " ", alpha = " / " },
       },
+      highlighter = {
+        limit_models = nil
+      },
     })
   end
 }
@@ -87,6 +90,37 @@ vim.keymap.set("x", "<leader>c/", function()
   -- update CursorLine
   vim.api_set_hl(0, "CursorLine", { bg = color })
 end)
+```
+
+## Extensions
+
+### Highlighter
+
+The color highlighter is a completely optional, experimental component. There are many capable color highlighting extensions out there. This one strives to support all of the models available in Spectrolite. There are no plans, however, to support named colors, Tailwind variables, etc. Supported models with alpha-channel don't simulate transparency in any way.
+
+The highlighting may seem slow, but that's intentional. Instead of slowing down your system, it updates highlights on `CursorHold`, when the client is idle. You can also limit which color models it operates on with `highlighter = { limit_models = { ... } }`. Currently, with 8 different SRGB models it supports, it is capable of highlighting at least 10_000 color coordinates with no performance issues on an outdated laptop.
+
+To enable this extension, do something like:
+
+```lua
+-- will be enabled on startup
+require("spectrolite.highlighter").enable()
+
+-- AND/OR
+
+-- highlight only HEX(A) colors
+vim.keymap.set("n", "<Leader>tc", function()
+  require("spectrolite.highlighter").toggle({
+    highlighter = { limit_models = { "hexa", "hex" } }
+  })
+end, { desc = "Toggle : Colorize" })
+
+-- AND/OR
+
+-- same as limit_models = false
+vim.keymap.set("n", "<Leader>tC", function()
+  require("spectrolite.highlighter").toggle()
+end, { desc = "Toggle : Colorize All" })
 ```
 
 ## Credits

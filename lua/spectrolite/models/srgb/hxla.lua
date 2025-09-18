@@ -17,6 +17,8 @@ local BC_DA = B * C - D * A
 local M = {}
 M.pattern =
   "hxla%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?[/,%s]+([%d%.]+%%?)%s*%)"
+M.capture =
+  "hxla%s*%(%s*[%d%.]+[,%s]+[%d%.]+%%?[,%s]+[%d%.]+%%?[/,%s]+[%d%.]+%%?%s*%)"
 
 function M.parse(str)
   local h, x, l, a = str:match(M.pattern)

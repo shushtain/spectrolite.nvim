@@ -1,5 +1,6 @@
 spectrolite-commands	spectrolite.txt	/*spectrolite-commands*
 spectrolite-commands#Spectrolite	spectrolite.txt	/*spectrolite-commands#Spectrolite*
+spectrolite-commands#SpectroliteHighlighter	spectrolite.txt	/*spectrolite-commands#SpectroliteHighlighter*
 spectrolite-config	spectrolite.txt	/*spectrolite-config*
 spectrolite-config#percents	spectrolite.txt	/*spectrolite-config#percents*
 spectrolite-config#quiet	spectrolite.txt	/*spectrolite-config#quiet*
@@ -7,6 +8,8 @@ spectrolite-config#round	spectrolite.txt	/*spectrolite-config#round*
 spectrolite-config#separators	spectrolite.txt	/*spectrolite-config#separators*
 spectrolite-config#symbol	spectrolite.txt	/*spectrolite-config#symbol*
 spectrolite-config#uppercase	spectrolite.txt	/*spectrolite-config#uppercase*
+spectrolite-extensions	spectrolite.txt	/*spectrolite-extensions*
+spectrolite-extensions#Highlighter	spectrolite.txt	/*spectrolite-extensions#Highlighter*
 spectrolite-functions	spectrolite.txt	/*spectrolite-functions*
 spectrolite-functions#convert	spectrolite.txt	/*spectrolite-functions#convert*
 spectrolite-functions#denormalize	spectrolite.txt	/*spectrolite-functions#denormalize*

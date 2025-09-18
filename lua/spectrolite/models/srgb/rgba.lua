@@ -8,6 +8,8 @@
 local M = {}
 M.pattern =
   "rgba%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)[,%s]+([%d%.]+)[/,%s]+([%d%.]+%%?)%s*%)"
+M.capture =
+  "rgba%s*%(%s*[%d%.]+[,%s]+[%d%.]+[,%s]+[%d%.]+[/,%s]+[%d%.]+%%?%s*%)"
 
 function M.parse(str)
   local r, g, b, a = str:match(M.pattern)

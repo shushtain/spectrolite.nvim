@@ -4,6 +4,10 @@
 ---@field hsla? Spectrolite.Config.HSLA Options for HSL(A)
 ---@field hxla? Spectrolite.Config.HXLA Options for Cubehelix (with Alpha)
 ---@field rgba? Spectrolite.Config.RGBA Options for RGB(A)
+---@field highlighter? Spectrolite.Config.Highlighter Options for highlighter
+
+---@class Spectrolite.Config.Highlighter
+---@field limit_models? table|false If `false`, all supported models are allowed. If table, limit highlighting to specified models. Default is `false`
 
 ---@class Spectrolite.Config.HEXA
 ---@field uppercase? boolean If `true`, uppercase values. Default is `false`
@@ -82,6 +86,9 @@ M.config = {
     round = { r = 0, g = 0, b = 0, a = 2 },
     percents = { a = false },
     separators = { regular = " ", alpha = " / " },
+  },
+  highlighter = {
+    limit_models = false,
   },
 }
 

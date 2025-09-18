@@ -2,7 +2,7 @@
 
 local M = {}
 
----Get pattern used to parse model.
+---Get pattern used to parse into model.
 ---@param model Spectrolite.Models Color model to get pattern from
 ---@return string
 function M.get_pattern(model)

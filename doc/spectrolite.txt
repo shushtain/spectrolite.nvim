@@ -29,6 +29,9 @@ Setup is optional and used only to override default configuration:
         percents = { a = false },
         separators = { regular = " ", alpha = " / " },
       },
+      highlighter = {
+        limit_models = false,
+      }
     })
 <
 
@@ -116,6 +119,65 @@ Here is a silly example of changing CursorLine:
 See |spectrolite-functions| to learn more.
 
 ==============================================================================
+EXTENSIONS                                            *spectrolite-extensions*
+
+                                          *spectrolite-extensions#Highlighter*
+Highlighter ~
+
+The color highlighter is a completely optional, experimental component.
+There are many capable color highlighting extensions out there.
+This one strives to support all of the models available in Spectrolite.
+There are no plans, however, to support named colors, Tailwind variables, etc.
+
+The highlighting may seem slow, but that's intentional. Instead of slowing
+down your system, it updates highlights on `CursorHold`, when the client
+is idle. You can also limit which color models it operates on with
+`highlighter = { limit_models = { ... } }`. Currently, with 8 different
+SRGB models it supports, it is capable of highlighting at least 10_000 colors
+with no performance issues on a quite slow laptop.
+
+To enable the extension:
+
+>
+    -- will be enabled on startup
+    require("spectrolite.highlighter").enable()
+
+    -- AND/OR
+
+    vim.keymap.set("n", "<Leader>tc", function()
+      require("spectrolite.highlighter").toggle()
+    end, { desc = "Toggle : Colorizer" })
+<
+
+There are three main functions: `toggle()`, `enable()`, and `disable()`.
+They are mirrored by `:SpectroliteHighlighter toggle/enable/disable`.
+Unlike cmdline commands, functions accept `opts` table. So you can have:
+
+>
+    -- enables default models on startup
+    require("spectrolite.highlighter").enable()
+    -- -- this would also do the same thing:
+    -- require("spectrolite.highlighter").enable({
+    --   highlighter = {
+    --     limit_models = false
+    --   }
+    -- })
+
+    -- will highlight only HEX(A) colors
+    vim.keymap.set("n", "<Leader>tc", function()
+      require("spectrolite.highlighter").toggle({
+        highlighter = {
+          limit_models = { "hexa", "hex" }
+        }
+    })
+    end, { desc = "Toggle : Colorize" })
+
+    vim.keymap.set("n", "<Leader>tC", function()
+      require("spectrolite.highlighter").toggle()
+    end, { desc = "Toggle : Colorize All" })
+<
+
+==============================================================================
 COMMANDS                                                *spectrolite-commands*
 
                                             *spectrolite-commands#Spectrolite*
@@ -131,6 +193,11 @@ and on the last selection in the `normal` mode.
 
 Use `:Spectrolite <model>` to convert into specific, known color model,
 or just `:Spectrolite` to select the color model from the list.
+
+                                 *spectrolite-commands#SpectroliteHighlighter*
+SpectroliteHighlighter ~
+
+Must be provided with `enable`, `disable`, or `toggle`.
 
 ==============================================================================
 FUNCTIONS                                              *spectrolite-functions*

@@ -7,6 +7,7 @@
 ---@type Spectrolite.SRGB.Model
 local M = {}
 M.pattern = "#?(%x+)"
+M.capture = "#%x+"
 
 function M.parse(str)
   local hexa = str:match(M.pattern)

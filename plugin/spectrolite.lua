@@ -1,7 +1,7 @@
-if vim.g.spectrolite_loaded then
+if vim.g.spectrolite then
   return
 end
-vim.g.spectrolite_loaded = true
+vim.g.spectrolite = {}
 
 vim.api.nvim_create_user_command("Spectrolite", function(cmd)
   local handle = require("spectrolite.utils.cmd").spectrolite
@@ -40,6 +40,16 @@ end, {
   range = true,
   desc = "Convert color into target mode",
   complete = function(...)
-    return require("spectrolite.utils.cmd").complete(...)
+    return require("spectrolite.utils.cmd").complete_spectrolite(...)
+  end,
+})
+
+vim.api.nvim_create_user_command("SpectroliteHighlighter", function(cmd)
+  require("spectrolite.highlighter")[cmd.fargs[1]]()
+end, {
+  nargs = 1,
+  desc = "Highlight colors in the buffer",
+  complete = function(...)
+    return require("spectrolite.utils.cmd").complete_highlighter(...)
   end,
 })

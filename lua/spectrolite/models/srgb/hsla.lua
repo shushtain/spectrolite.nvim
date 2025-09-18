@@ -8,6 +8,8 @@
 local M = {}
 M.pattern =
   "hsla%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?[/,%s]+([%d%.]+%%?)%s*%)"
+M.capture =
+  "hsla%s*%(%s*[%d%.]+[,%s]+[%d%.]+%%?[,%s]+[%d%.]+%%?[/,%s]+[%d%.]+%%?%s*%)"
 
 function M.parse(str)
   local h, s, l, a = str:match(M.pattern)

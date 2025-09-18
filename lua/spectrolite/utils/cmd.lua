@@ -12,7 +12,7 @@ function M.spectrolite(str_in, model_out, sel)
   write(sel, str_out)
 end
 
-function M.complete(prefix, line, col)
+function M.complete_spectrolite(prefix, line, col)
   line = line:sub(1, col):match("Spectrolite%s+([^%s]*)$")
   if not line then
     return {}
@@ -26,6 +26,21 @@ function M.complete(prefix, line, col)
 
   table.sort(models)
   return models
+end
+
+function M.complete_highlighter(prefix, line, col)
+  line = line:sub(1, col):match("SpectroliteHighlighter%s+([^%s]*)$")
+  if not line then
+    return {}
+  end
+
+  local actions = { "toggle", "enable", "disable" }
+  actions = vim.tbl_filter(function(x)
+    return tostring(x):find(prefix, 1, true) == 1
+  end, actions)
+
+  table.sort(actions)
+  return actions
 end
 
 return M

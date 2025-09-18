@@ -44,7 +44,7 @@ return {
         separators = { regular = " ", alpha = " / " },
       },
       highlighter = {
-        limit_models = nil
+        limit_models = false
       },
     })
   end

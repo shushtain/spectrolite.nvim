@@ -6,11 +6,11 @@
 
 ---@type Spectrolite.SRGB.Model
 local M = {}
+M.pattern =
+  "rgba%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)[,%s]+([%d%.]+)[/,%s]+([%d%.]+%%?)%s*%)"
 
 function M.parse(str)
-  local r, g, b, a = str:match(
-    "rgba%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)[,%s]+([%d%.]+)[/,%s]+([%d%.]+%%?)%s*%)"
-  )
+  local r, g, b, a = str:match(M.pattern)
 
   if not a then
     return nil

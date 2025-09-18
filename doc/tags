@@ -12,6 +12,7 @@ spectrolite-functions#convert	spectrolite.txt	/*spectrolite-functions#convert*
 spectrolite-functions#denormalize	spectrolite.txt	/*spectrolite-functions#denormalize*
 spectrolite-functions#format	spectrolite.txt	/*spectrolite-functions#format*
 spectrolite-functions#get_base	spectrolite.txt	/*spectrolite-functions#get_base*
+spectrolite-functions#get_pattern	spectrolite.txt	/*spectrolite-functions#get_pattern*
 spectrolite-functions#normalize	spectrolite.txt	/*spectrolite-functions#normalize*
 spectrolite-functions#parse	spectrolite.txt	/*spectrolite-functions#parse*
 spectrolite-functions#print	spectrolite.txt	/*spectrolite-functions#print*

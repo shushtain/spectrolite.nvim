@@ -15,11 +15,11 @@ local BC_DA = B * C - D * A
 
 ---@type Spectrolite.SRGB.Model
 local M = {}
+M.pattern =
+  "hxla%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?[/,%s]+([%d%.]+%%?)%s*%)"
 
 function M.parse(str)
-  local h, x, l, a = str:match(
-    "hxla%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?[/,%s]+([%d%.]+%%?)%s*%)"
-  )
+  local h, x, l, a = str:match(M.pattern)
 
   if not a then
     return nil

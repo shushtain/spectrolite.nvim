@@ -5,9 +5,10 @@
 
 ---@type Spectrolite.SRGB.Model
 local M = {}
+M.pattern = "#?(%x+)"
 
 function M.parse(str)
-  local hex = str:match("#?(%x+)")
+  local hex = str:match(M.pattern)
   local rx, gx, bx
 
   if hex and #hex == 3 then

@@ -2,6 +2,14 @@
 
 local M = {}
 
+---Get pattern used to parse model.
+---@param model Spectrolite.Models Color model to get pattern from
+---@return string
+function M.get_pattern(model)
+  local base = M.get_base(model)
+  return require("spectrolite.models." .. base .. "." .. model).pattern
+end
+
 ---Read from selection. Multi-line input is not supported.
 ---Does not check if valid color is read. Use `parse()` to validate output.
 ---@param opts? Spectrolite.Config Temporary config overrides
@@ -107,9 +115,8 @@ end
 
 ---Get base (model group) of model
 ---@param model Spectrolite.Models
----@param opts? Spectrolite.Config Temporary config overrides
 ---@return Spectrolite.Bases base
-function M.get_base(model, opts)
+function M.get_base(model)
   local models = require("spectrolite.models").models
   return models[model].base
 end
@@ -118,9 +125,8 @@ end
 ---@param base_in Spectrolite.Bases Base to switch from
 ---@param base_out Spectrolite.Bases Base to switch to
 ---@param normal Spectrolite.Normals Normalized coordinates
----@param opts? Spectrolite.Config Temporary config overrides
 ---@return Spectrolite.Normals normal_out Normalized coordinates
-function M.rebase(base_in, base_out, normal, opts)
+function M.rebase(base_in, base_out, normal)
   if base_in == base_out then
     return normal
   end

@@ -1,4 +1,5 @@
 ---@class Spectrolite.SRGB.Model
+---@field pattern string
 ---@field parse fun(str: string): Spectrolite.SRGB.Colors?
 ---@field normalize fun(color: Spectrolite.SRGB.Colors): Spectrolite.SRGB.Normal
 ---@field denormalize fun(normal: Spectrolite.SRGB.Normal): Spectrolite.Colors

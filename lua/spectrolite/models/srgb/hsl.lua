@@ -5,10 +5,10 @@
 
 ---@type Spectrolite.SRGB.Model
 local M = {}
+M.pattern = "hsl%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?%s*%)"
 
 function M.parse(str)
-  local h, s, l =
-    str:match("hsl%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?%s*%)")
+  local h, s, l = str:match(M.pattern)
 
   h = tonumber(h)
   s = tonumber(s)

@@ -14,10 +14,10 @@ local BC_DA = B * C - D * A
 
 ---@type Spectrolite.SRGB.Model
 local M = {}
+M.pattern = "hxl%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?%s*%)"
 
 function M.parse(str)
-  local h, x, l =
-    str:match("hxl%s*%(%s*([%d%.]+)[,%s]+([%d%.]+)%%?[,%s]+([%d%.]+)%%?%s*%)")
+  local h, x, l = str:match(M.pattern)
 
   h = tonumber(h)
   x = tonumber(x)

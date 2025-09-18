@@ -151,13 +151,18 @@ Convert between color models.
 
 This is a combination of simpler functions described later. Unlike the main
 `:Spectrolite` command, it doesn't read from the buffer, and doesn't replace
-selection with the output. It is primarely for converting strings you already
+selection with the output. It is primarily for converting strings you already
 have to strings you need elsewhere.
 
-For example, you could capture text width of the buffer, put it inside `hue`
-coordinate of `hsl` color, pass it to this function, and receive `hex` string 
-that can be passed into `colorcolumn` highlight. The wider the text width,
-the more relaxed and chilled out the column will be :)
+                                           *spectrolite-functions#get_pattern*
+get_pattern() ~
+
+Get the pattern used to parse the color model.
+
+>
+    ---@param model Spectrolite.Models Color model to get pattern from
+    ---@return string
+<
 
                                                   *spectrolite-functions#read*
 read() ~
@@ -213,7 +218,6 @@ Get base (model group) of model.
 
 >
     ---@param model Spectrolite.Models
-    ---@param opts? Spectrolite.Config Temporary config overrides
     ---@return Spectrolite.Bases base
 <
 
@@ -230,7 +234,6 @@ Switch model groups by converting normalized coordinates.
     ---@param base_in Spectrolite.Bases Base to switch from
     ---@param base_out Spectrolite.Bases Base to switch to
     ---@param normal Spectrolite.Normals Normalized coordinates
-    ---@param opts? Spectrolite.Config Temporary config overrides
     ---@return Spectrolite.Normals normal_out
 <
 
